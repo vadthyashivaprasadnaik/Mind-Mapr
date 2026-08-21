@@ -270,6 +270,7 @@ export default function Quiz() {
         answerHistory: answersHistory,
         topicPerformance: topicStats,
         timeSpent: formattedTimeSpent,
+        questions,
         material,
         from: '/quiz',
         previousFrom: location.state?.from || '/ai-analysis',
