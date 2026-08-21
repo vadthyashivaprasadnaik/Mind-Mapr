@@ -747,15 +747,16 @@ export default function Materials() {
                       )}
 
                       {isNotAnalyzed && (
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={() => handleAnalyzeMaterial(mat.id, mat.title)}
-                          iconLeft={Sparkles}
-                          className="font-semibold text-xs py-1.5 px-3.5 cursor-pointer"
-                        >
-                          Analyze
-                        </Button>
+                        <Link to="/ai-analysis" state={{ from: '/materials', material: mat }}>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            iconLeft={Sparkles}
+                            className="font-semibold text-xs py-1.5 px-3.5 cursor-pointer"
+                          >
+                            Analyze
+                          </Button>
+                        </Link>
                       )}
 
                       <Button

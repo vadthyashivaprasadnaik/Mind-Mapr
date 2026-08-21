@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   FileText,
@@ -16,7 +16,9 @@ import {
   Check,
   FileCheck2,
   AlertTriangle,
-  ChevronRight
+  Play,
+  XCircle,
+  Clock
 } from 'lucide-react';
 import PageHeader from '../components/ui/PageHeader';
 import BackButton from '../components/ui/BackButton';
@@ -43,8 +45,8 @@ export default function AIAnalysis() {
 
   const material = location.state?.material || defaultMaterial;
 
-  // Processing Lifecycle State: 'processing' | 'completed' | 'error'
-  const [processingState, setProcessingState] = useState('processing');
+  // Processing Lifecycle State: 'idle' | 'processing' | 'completed' | 'error'
+  const [processingState, setProcessingState] = useState('idle');
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const timerRef = useRef(null);
 
@@ -54,58 +56,66 @@ export default function AIAnalysis() {
       id: 1,
       title: 'File Uploaded',
       description: 'Your study material has been received.',
-      detail: 'Verifying document integrity and caching binary representation.',
+      operation: 'File Uploaded',
+      operationDesc: 'Document binary verified and cached in memory.',
     },
     {
       id: 2,
       title: 'Extracting Content',
       description: 'Reading and preparing the material.',
-      detail: 'Parsing text layers, code blocks, diagrams, and section headings.',
+      operation: 'Extracting Content',
+      operationDesc: 'Reading and preparing the document text, figures, and structural hierarchy.',
     },
     {
       id: 3,
       title: 'Identifying Topics',
       description: 'Finding major topics and concepts.',
-      detail: 'Clustering core modules: Process Scheduling, Threads, Memory Management.',
+      operation: 'Identifying Topics',
+      operationDesc: 'Finding the major concepts and organizing them for structured revision.',
     },
     {
       id: 4,
       title: 'Finding Important Concepts',
       description: 'Identifying high-priority concepts for revision.',
-      detail: 'Highlighting high-yield exam algorithms, formulas, and theorems.',
+      operation: 'Finding Important Concepts',
+      operationDesc: 'Identifying high-priority exam concepts, formulas, algorithms, and key definitions.',
     },
     {
       id: 5,
       title: 'Generating Summary',
       description: 'Creating a concise exam-focused summary.',
-      detail: 'Synthesizing key takeaways and bulleted chapter digests.',
+      operation: 'Generating Summary',
+      operationDesc: 'Synthesizing key takeaways and bulleted chapter digests.',
     },
     {
       id: 6,
       title: 'Building Mind Map',
       description: 'Organizing concepts and relationships visually.',
-      detail: 'Constructing multi-tier hierarchical nodes with semantic edge links.',
+      operation: 'Building Mind Map',
+      operationDesc: 'Organizing visual node connections and semantic knowledge relationships.',
     },
     {
       id: 7,
       title: 'Creating Flashcards',
       description: 'Generating active-recall flashcards.',
-      detail: 'Building 28 front-and-back flashcards with spaced repetition metadata.',
+      operation: 'Creating Flashcards',
+      operationDesc: 'Generating active-recall study cards with spaced repetition triggers.',
     },
     {
       id: 8,
       title: 'Preparing Quiz',
       description: 'Creating practice questions based on the material.',
-      detail: 'Compiling 10 adaptive multiple-choice questions with answer rationales.',
+      operation: 'Preparing Quiz',
+      operationDesc: 'Creating adaptive practice questions with answer rationales based on your notes.',
     },
   ];
 
-  // 5 Generated Resource Cards
+  // 5 Generated Revision Resource Cards
   const resourceCards = [
     {
       id: 'summary',
       title: 'Smart Summary',
-      description: 'Review the key concepts and important points from your material.',
+      description: 'Review the most important concepts and points from your material.',
       buttonText: 'Open Summary',
       route: '/summary',
       icon: FileText,
@@ -127,7 +137,7 @@ export default function AIAnalysis() {
     {
       id: 'flashcards',
       title: 'Flashcards',
-      description: 'Practice active recall using generated flashcards.',
+      description: 'Practice active recall using generated study cards.',
       buttonText: 'Practice Flashcards',
       route: '/flashcards',
       icon: Layers,
@@ -144,12 +154,12 @@ export default function AIAnalysis() {
       icon: GraduationCap,
       color: 'bg-emerald-50 text-emerald-600 border-emerald-100',
       badge: 'Ready',
-      stats: '10 adaptive questions',
+      stats: '10 practice questions',
     },
     {
       id: 'important-topics',
       title: 'Important Topics',
-      description: 'Review the concepts that should receive more revision attention.',
+      description: 'Focus your revision on high-priority concepts.',
       buttonText: 'View Topics',
       route: '/important-topics',
       icon: Bookmark,
@@ -167,7 +177,7 @@ export default function AIAnalysis() {
     setCurrentStepIndex(0);
 
     let currentStep = 0;
-    const stepDuration = 500; // ms per step
+    const stepDuration = 550; // ms per step
 
     timerRef.current = setInterval(() => {
       currentStep += 1;
@@ -177,41 +187,45 @@ export default function AIAnalysis() {
         clearInterval(timerRef.current);
         setCurrentStepIndex(3);
         setProcessingState('error');
-        toast.error('Simulation error: Analysis interrupted.');
+        toast.error('Analysis Failed: Process interrupted.');
         return;
       }
 
-      if (currentStep < 8) {
+      if (currentStep < steps.length) {
         setCurrentStepIndex(currentStep);
       } else {
         clearInterval(timerRef.current);
-        setCurrentStepIndex(8);
+        setCurrentStepIndex(steps.length);
         setProcessingState('completed');
-        toast.success('Your revision resources are ready! Explore below.');
+        toast.success('Analysis Complete! Your revision resources are ready.');
       }
     }, stepDuration);
   };
 
-  // Start analysis simulation on component mount once
+  // Cancel Analysis handler
+  const handleCancelAnalysis = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    setProcessingState('idle');
+    setCurrentStepIndex(0);
+    toast.info('Analysis cancelled.');
+  };
+
+  // Cleanup timers on unmount
   useEffect(() => {
-    startSimulation(false);
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Calculate live progress percentage
-  const progressPercentage = Math.min(
-    100,
-    Math.round(((currentStepIndex + (processingState === 'completed' ? 0 : 0.5)) / 8) * 100)
-  );
+  const progressPercentage = processingState === 'idle'
+    ? 0
+    : processingState === 'completed'
+      ? 100
+      : Math.min(99, Math.round(((currentStepIndex + 0.5) / steps.length) * 100));
 
-  // Restart / Try Again
-  const handleTryAgain = () => {
-    startSimulation(false);
-    toast.info('Restarting AI analysis simulation...');
-  };
+  // Current active step details for the secondary information section
+  const activeStep = steps[Math.min(currentStepIndex, steps.length - 1)];
 
   return (
     <div className="flex flex-col gap-6 pb-12">
@@ -236,7 +250,7 @@ export default function AIAnalysis() {
               className="hidden sm:inline-flex text-[11px] font-semibold text-slate-400 hover:text-red-600 bg-slate-100 hover:bg-red-50 border border-slate-200 px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer"
               title="Test error state behavior"
             >
-              Test Error State
+              Simulate Error
             </button>
 
             {/* Back to My Materials CTA */}
@@ -255,7 +269,7 @@ export default function AIAnalysis() {
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. ACTIVE MATERIAL INFORMATION CARD                                       */}
+      {/* 2. MATERIAL BEING ANALYZED CARD                                           */}
       {/* ========================================================================= */}
       <Card className="border-slate-200/80 bg-white shadow-xs overflow-hidden">
         <CardContent className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -286,6 +300,12 @@ export default function AIAnalysis() {
 
           {/* Status Badge Indicator */}
           <div className="flex items-center gap-2 shrink-0">
+            {processingState === 'idle' && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                <Clock className="w-3.5 h-3.5" />
+                <span>Status: Ready for Analysis</span>
+              </span>
+            )}
             {processingState === 'processing' && (
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200 animate-pulse">
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -301,7 +321,7 @@ export default function AIAnalysis() {
             {processingState === 'error' && (
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-50 text-red-700 border border-red-200">
                 <AlertCircle className="w-3.5 h-3.5" />
-                <span>Status: Interrupted</span>
+                <span>Status: Failed</span>
               </span>
             )}
           </div>
@@ -309,10 +329,80 @@ export default function AIAnalysis() {
       </Card>
 
       {/* ========================================================================= */}
-      {/* 3. MAIN ANALYSIS PROGRESS / ERROR / COMPLETION WORKFLOW                   */}
+      {/* 3. MULTI-STAGE WORKFLOW ENGINE (IDLE | PROCESSING | ERROR | COMPLETED)    */}
       {/* ========================================================================= */}
 
-      {/* STATE A: ACTIVE PROCESSING */}
+      {/* ------------------------------------------------------------------------- */}
+      {/* STAGE 1: IDLE / READY TO ANALYZE                                          */}
+      {/* ------------------------------------------------------------------------- */}
+      {processingState === 'idle' && (
+        <Card className="border-slate-200/90 shadow-md bg-gradient-to-br from-white via-slate-50/50 to-primary-50/20 animate-in fade-in duration-300">
+          <CardContent className="p-8 sm:p-12 text-center max-w-xl mx-auto flex flex-col items-center">
+            <div className="w-16 h-16 rounded-3xl bg-primary-50 text-primary-600 border border-primary-100 flex items-center justify-center shadow-md shadow-primary-500/10 mb-4">
+              <Sparkles className="w-8 h-8 text-primary-600 animate-pulse" />
+            </div>
+
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              Ready to analyze your material?
+            </h3>
+
+            <p className="text-sm text-slate-600 mt-2 leading-relaxed">
+              Mind Mapr will identify important concepts and prepare revision resources from your study material.
+            </p>
+
+            {/* Feature Highlights Pills */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-6 w-full text-left">
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span className="text-xs font-semibold text-slate-700">Exam Summary</span>
+              </div>
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span className="text-xs font-semibold text-slate-700">Visual Mind Map</span>
+              </div>
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span className="text-xs font-semibold text-slate-700">Recall Flashcards</span>
+              </div>
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span className="text-xs font-semibold text-slate-700">Practice Quiz</span>
+              </div>
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs sm:col-span-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span className="text-xs font-semibold text-slate-700">Key Priority Topics</span>
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center gap-3 mt-8 w-full sm:w-auto">
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={() => startSimulation(false)}
+                iconLeft={Play}
+                className="w-full sm:w-auto font-bold px-8 py-3.5 shadow-lg shadow-primary-500/25 text-sm sm:text-base cursor-pointer"
+              >
+                Start AI Analysis
+              </Button>
+
+              <Link to="/materials" className="w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto font-semibold text-xs sm:text-sm"
+                >
+                  Back to My Materials
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ------------------------------------------------------------------------- */}
+      {/* STAGE 2: PROCESSING STATE                                                 */}
+      {/* ------------------------------------------------------------------------- */}
       {processingState === 'processing' && (
         <div className="flex flex-col gap-6 animate-in fade-in duration-300">
           {/* Progress Header Card */}
@@ -328,28 +418,63 @@ export default function AIAnalysis() {
                     Analyzing your study material
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                    Mind Mapr is processing your material and preparing personalized revision resources.
+                    Please wait while Mind Mapr processes your material.
                   </p>
                 </div>
 
-                <div className="text-left sm:text-right shrink-0">
-                  <span className="text-3xl sm:text-4xl font-extrabold text-primary-600 font-mono tracking-tight">
-                    {progressPercentage}%
-                  </span>
-                  <span className="text-[11px] font-bold text-slate-400 block uppercase tracking-wider mt-0.5">
-                    Step {Math.min(currentStepIndex + 1, steps.length)} of {steps.length} Complete
-                  </span>
+                <div className="flex items-center gap-4 sm:flex-col sm:items-end shrink-0">
+                  <div className="text-left sm:text-right">
+                    <span className="text-3xl sm:text-4xl font-extrabold text-primary-600 font-mono tracking-tight">
+                      {progressPercentage}% Complete
+                    </span>
+                    <span className="text-[11px] font-bold text-slate-400 block uppercase tracking-wider mt-0.5">
+                      Step {Math.min(currentStepIndex + 1, steps.length)} of {steps.length}
+                    </span>
+                  </div>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCancelAnalysis}
+                    iconLeft={XCircle}
+                    className="text-xs font-semibold text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
+                  >
+                    Cancel Analysis
+                  </Button>
                 </div>
               </div>
 
               {/* Live Animated Progress Bar */}
-              <div className="mt-2">
+              <div className="mt-3">
                 <ProgressBar
                   value={progressPercentage}
                   max={100}
                   variant="primary"
                   size="lg"
                 />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Dynamic Active Operation Details Section */}
+          <Card className="border-primary-100 bg-primary-50/40 shadow-2xs">
+            <CardContent className="p-4 sm:p-5 flex items-start gap-3.5">
+              <div className="w-9 h-9 rounded-xl bg-primary-600 text-white flex items-center justify-center shadow-xs shrink-0 mt-0.5">
+                <Loader2 className="w-5 h-5 animate-spin" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] uppercase font-bold text-primary-700 tracking-wider">
+                    Current Operation
+                  </span>
+                  <span className="text-xs text-slate-300">•</span>
+                  <span className="text-xs font-bold text-slate-900">
+                    {activeStep.operation}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                  {activeStep.operationDesc}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -429,7 +554,9 @@ export default function AIAnalysis() {
         </div>
       )}
 
-      {/* STATE B: ERROR STATE */}
+      {/* ------------------------------------------------------------------------- */}
+      {/* STAGE 3: ERROR STATE                                                      */}
+      {/* ------------------------------------------------------------------------- */}
       {processingState === 'error' && (
         <Card className="border-red-200 bg-red-50/20 shadow-md animate-in fade-in duration-300">
           <CardContent className="p-8 sm:p-12 text-center max-w-lg mx-auto flex flex-col items-center">
@@ -438,35 +565,37 @@ export default function AIAnalysis() {
             </div>
 
             <h3 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-              Analysis couldn't be completed
+              Analysis Failed
             </h3>
 
             <p className="text-sm text-slate-600 mt-2 leading-relaxed max-w-md">
-              Something went wrong while processing your study material. Please try again.
+              We couldn't finish analyzing this material. Please try again.
             </p>
 
-            <div className="flex items-center gap-3 mt-6">
-              <Link to="/materials">
-                <Button variant="outline" size="md" className="font-semibold text-xs sm:text-sm">
-                  Back to My Materials
-                </Button>
-              </Link>
-
+            <div className="flex flex-col sm:flex-row items-center gap-3 mt-6 w-full sm:w-auto">
               <Button
                 variant="primary"
                 size="md"
-                onClick={handleTryAgain}
+                onClick={() => startSimulation(false)}
                 iconLeft={RefreshCw}
-                className="font-semibold text-xs sm:text-sm shadow-md shadow-primary-500/20"
+                className="w-full sm:w-auto font-semibold text-xs sm:text-sm shadow-md shadow-primary-500/20"
               >
                 Try Again
               </Button>
+
+              <Link to="/materials" className="w-full sm:w-auto">
+                <Button variant="outline" size="md" className="w-full sm:w-auto font-semibold text-xs sm:text-sm">
+                  Back to My Materials
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* STATE C: COMPLETION STATE WITH 5 RESOURCE CARDS */}
+      {/* ------------------------------------------------------------------------- */}
+      {/* STAGE 4: COMPLETION STATE WITH 5 RESOURCE CARDS                            */}
+      {/* ------------------------------------------------------------------------- */}
       {processingState === 'completed' && (
         <div className="flex flex-col gap-8 animate-in fade-in zoom-in-95 duration-300">
           {/* Success Banner */}
@@ -483,13 +612,13 @@ export default function AIAnalysis() {
                 <div>
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300 text-xs font-bold mb-1.5 border border-emerald-400/30">
                     <CheckCircle2 className="w-3 h-3" />
-                    <span>Analysis simulation complete</span>
+                    <span>Analysis Complete!</span>
                   </div>
                   <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-                    Your revision resources are ready!
+                    Your study material is ready for smart revision.
                   </h3>
                   <p className="text-sm text-slate-300 mt-1 max-w-xl">
-                    Your study material has been processed and is ready for revision. Choose a tool below to begin.
+                    Choose a revision tool below to start active recall, explore conceptual mind maps, or test your retention.
                   </p>
                 </div>
               </div>
@@ -498,12 +627,12 @@ export default function AIAnalysis() {
                 <Button
                   variant="glass"
                   size="md"
-                  onClick={handleTryAgain}
+                  onClick={() => startSimulation(false)}
                   iconLeft={RefreshCw}
                   className="font-semibold text-xs text-white"
                   title="Re-run simulation"
                 >
-                  Replay Analysis
+                  Re-analyze Material
                 </Button>
                 <Link to="/materials">
                   <Button
@@ -523,7 +652,7 @@ export default function AIAnalysis() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h4 className="text-base font-bold text-slate-900 tracking-tight">
-                  Generated Smart Revision Resources
+                  Generated Revision Resources
                 </h4>
                 <p className="text-xs text-slate-500 mt-0.5">
                   Select any tool to start your active recall and visual study workflow.
@@ -571,7 +700,7 @@ export default function AIAnalysis() {
                         </div>
                       </div>
 
-                      {/* Action Button */}
+                      {/* Action Button with preserved navigation state */}
                       <div className="mt-6 pt-4 border-t border-slate-100">
                         <Link to={card.route} state={{ from: '/ai-analysis', material }} className="block w-full">
                           <Button
