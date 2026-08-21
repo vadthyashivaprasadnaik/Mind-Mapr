@@ -722,7 +722,7 @@ export default function Materials() {
                   <div className="mt-5 pt-3.5 border-t border-slate-100 flex items-center justify-between gap-2">
                     <div className="flex items-center gap-1.5">
                       {isReady && (
-                        <Link to="/summary">
+                        <Link to="/summary" state={{ from: '/materials', material: mat }}>
                           <Button
                             variant="primary"
                             size="sm"
@@ -950,27 +950,27 @@ export default function Materials() {
               <div className="pt-2">
                 <h5 className="font-bold text-slate-900 mb-2">Generated Revision Resources:</h5>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  <Link to="/summary" onClick={() => setIsDetailModalOpen(false)}>
+                  <Link to="/summary" state={{ from: '/materials', material: detailTarget }} onClick={() => setIsDetailModalOpen(false)}>
                     <Button variant="outline" size="sm" iconLeft={FileText} className="w-full text-xs justify-start">
                       Summary
                     </Button>
                   </Link>
-                  <Link to="/mind-map" onClick={() => setIsDetailModalOpen(false)}>
+                  <Link to="/mind-map" state={{ from: '/materials', material: detailTarget }} onClick={() => setIsDetailModalOpen(false)}>
                     <Button variant="outline" size="sm" iconLeft={Network} className="w-full text-xs justify-start">
                       Mind Map
                     </Button>
                   </Link>
-                  <Link to="/flashcards" onClick={() => setIsDetailModalOpen(false)}>
+                  <Link to="/flashcards" state={{ from: '/materials', material: detailTarget }} onClick={() => setIsDetailModalOpen(false)}>
                     <Button variant="outline" size="sm" iconLeft={Layers} className="w-full text-xs justify-start">
                       Flashcards
                     </Button>
                   </Link>
-                  <Link to="/quiz" onClick={() => setIsDetailModalOpen(false)}>
+                  <Link to="/quiz" state={{ from: '/materials', material: detailTarget }} onClick={() => setIsDetailModalOpen(false)}>
                     <Button variant="outline" size="sm" iconLeft={GraduationCap} className="w-full text-xs justify-start">
                       Quiz
                     </Button>
                   </Link>
-                  <Link to="/important-topics" onClick={() => setIsDetailModalOpen(false)}>
+                  <Link to="/important-topics" state={{ from: '/materials', material: detailTarget }} onClick={() => setIsDetailModalOpen(false)}>
                     <Button variant="outline" size="sm" iconLeft={Bookmark} className="w-full text-xs justify-start">
                       Key Topics
                     </Button>

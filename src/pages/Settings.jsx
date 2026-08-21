@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Settings as SettingsIcon, Shield, BellRing, Sparkles } from 'lucide-react';
+import BackButton from '../components/ui/BackButton';
 import PageHeader from '../components/ui/PageHeader';
 import Card, { CardContent, CardHeader } from '../components/ui/Card';
 import Button from '../components/ui/Button';
@@ -15,6 +16,7 @@ export default function Settings() {
 
   return (
     <div>
+      <BackButton label="Back" fallback="/dashboard" />
       <PageHeader
         title="Settings & System Configurations"
         description="Configure your study profile and smart AI revision engine."

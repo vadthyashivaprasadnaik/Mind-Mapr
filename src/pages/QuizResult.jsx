@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { Award, RefreshCw, BookOpen } from 'lucide-react';
 import PageHeader from '../components/ui/PageHeader';
+import BackButton from '../components/ui/BackButton';
 import Card, { CardContent } from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
@@ -14,6 +15,7 @@ export default function QuizResult() {
 
   return (
     <div>
+      <BackButton label="Back to Quiz" fallback="/quiz" to="/quiz" />
       <PageHeader
         title="Practice Quiz Results"
         description="Here is your comprehension scorecard."
@@ -53,10 +55,24 @@ export default function QuizResult() {
           </CardContent>
         </Card>
 
-        <div className="flex gap-3">
-          <Link to="/quiz">
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <Link
+            to="/quiz"
+            state={{
+              from: location.state?.previousFrom || '/ai-analysis',
+              material: location.state?.material,
+            }}
+          >
             <Button variant="outline" size="sm" iconLeft={RefreshCw}>
               Retry Quiz
+            </Button>
+          </Link>
+          <Link
+            to={location.state?.previousFrom || '/ai-analysis'}
+            state={{ material: location.state?.material }}
+          >
+            <Button variant="secondary" size="sm">
+              Back to AI Analysis
             </Button>
           </Link>
           <Link to="/dashboard">

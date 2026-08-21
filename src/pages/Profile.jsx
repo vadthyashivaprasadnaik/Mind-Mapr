@@ -1,6 +1,7 @@
 import React from 'react';
 import { User, Mail, GraduationCap } from 'lucide-react';
 import PageHeader from '../components/ui/PageHeader';
+import BackButton from '../components/ui/BackButton';
 import Card, { CardContent, CardHeader } from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import Input from '../components/ui/Input';
@@ -8,6 +9,7 @@ import Input from '../components/ui/Input';
 export default function Profile() {
   return (
     <div>
+      <BackButton label="Back" fallback="/dashboard" />
       <PageHeader
         title="Student Profile"
         description="Review and update your university account details."

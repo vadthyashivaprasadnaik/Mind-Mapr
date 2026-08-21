@@ -26,6 +26,7 @@ import RevisionPlan from '../pages/RevisionPlan';
 import Progress from '../pages/Progress';
 import Profile from '../pages/Profile';
 import Settings from '../pages/Settings';
+import AIAnalysis from '../pages/AIAnalysis';
 
 // Public Layout Wrapper (adds top Navbar and Footer)
 function PublicLayout() {
@@ -79,6 +80,7 @@ export default function AppRoutes() {
         <Route path="/progress" element={<Progress />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/ai-analysis" element={<AIAnalysis />} />
       </Route>
     </Routes>
   );

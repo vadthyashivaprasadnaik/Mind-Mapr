@@ -1,6 +1,7 @@
 import React from 'react';
 import { FileText, Copy, Share2, Sparkles } from 'lucide-react';
 import PageHeader from '../components/ui/PageHeader';
+import BackButton from '../components/ui/BackButton';
 import Card, { CardHeader, CardContent } from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import { useToast } from '../components/ui/Toast';
@@ -14,6 +15,7 @@ export default function Summary() {
 
   return (
     <div>
+      <BackButton label="Back" fallback="/materials" />
       <PageHeader
         title="AI Exam-Focused Summary"
         description="Review concise outlines of complex documents."

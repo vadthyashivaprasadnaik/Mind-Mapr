@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { GraduationCap, ArrowRight, HelpCircle } from 'lucide-react';
 import PageHeader from '../components/ui/PageHeader';
+import BackButton from '../components/ui/BackButton';
 import Card, { CardContent, CardHeader } from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import ProgressBar from '../components/ui/ProgressBar';
@@ -10,6 +11,7 @@ import { useToast } from '../components/ui/Toast';
 
 export default function Quiz() {
   const navigate = useNavigate();
+  const location = useLocation();
   const toast = useToast();
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -48,12 +50,21 @@ export default function Quiz() {
       setCurrentIdx((prev) => prev + 1);
     } else {
       toast.success('Quiz completed!');
-      navigate('/quiz-result', { state: { score: score + (selectedAnswer === questions[currentIdx].correct ? 1 : 0), total: questions.length } });
+      navigate('/quiz-result', {
+        state: {
+          score: score + (selectedAnswer === questions[currentIdx].correct ? 1 : 0),
+          total: questions.length,
+          from: '/quiz',
+          previousFrom: location.state?.from || '/ai-analysis',
+          material: location.state?.material,
+        },
+      });
     }
   };
 
   return (
     <div>
+      <BackButton label="Back" fallback="/materials" />
       <PageHeader
         title="Adaptive Practice Quiz"
         description="Verify your subject retention. Questions adapt based on your past quiz trends."

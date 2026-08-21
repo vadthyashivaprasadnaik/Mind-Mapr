@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Layers, RotateCcw, ThumbsUp, ThumbsDown, Sparkles } from 'lucide-react';
 import PageHeader from '../components/ui/PageHeader';
+import BackButton from '../components/ui/BackButton';
 import Card, { CardContent } from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
@@ -31,6 +32,7 @@ export default function Flashcards() {
 
   return (
     <div>
+      <BackButton label="Back" fallback="/materials" />
       <PageHeader
         title="AI-Generated Flashcards"
         description="Strengthen active recall using cards generated from your notes."

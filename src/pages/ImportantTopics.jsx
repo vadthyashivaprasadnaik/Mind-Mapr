@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bookmark, AlertTriangle, CheckCircle } from 'lucide-react';
 import PageHeader from '../components/ui/PageHeader';
+import BackButton from '../components/ui/BackButton';
 import Card, { CardContent } from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import { useToast } from '../components/ui/Toast';
@@ -16,6 +17,7 @@ export default function ImportantTopics() {
 
   return (
     <div>
+      <BackButton label="Back" fallback="/materials" />
       <PageHeader
         title="Key Exam Topics"
         description="Review high-priority concepts extracted from uploaded materials."

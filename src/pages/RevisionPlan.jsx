@@ -1,6 +1,7 @@
 import React from 'react';
 import { Calendar, Bell, Clock } from 'lucide-react';
 import PageHeader from '../components/ui/PageHeader';
+import BackButton from '../components/ui/BackButton';
 import Card, { CardContent } from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import { useToast } from '../components/ui/Toast';
@@ -16,6 +17,7 @@ export default function RevisionPlan() {
 
   return (
     <div>
+      <BackButton label="Back" fallback="/dashboard" />
       <PageHeader
         title="Personalized Revision Plan"
         description="Spaced repetition schedules calculated to optimize cognitive retention."

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Network, ZoomIn, ZoomOut, RefreshCw } from 'lucide-react';
 import PageHeader from '../components/ui/PageHeader';
-import Card, { CardContent } from '../components/ui/Card';
+import BackButton from '../components/ui/BackButton';
+import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import { useToast } from '../components/ui/Toast';
 
@@ -14,6 +15,7 @@ export default function MindMap() {
 
   return (
     <div>
+      <BackButton label="Back" fallback="/materials" />
       <PageHeader
         title="AI-Generated Mind Map"
         description="Interact with visual node connections of your courses to improve conceptual models."
