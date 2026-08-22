@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Network,
@@ -25,11 +25,45 @@ import ProgressBar from '../components/ui/ProgressBar';
 import { useToast } from '../components/ui/Toast';
 import { useUser } from '../context/UserContext';
 import { useLanguage } from '../context/LanguageContext';
+import { getHealthStatus } from '../services/api';
 
 export default function Dashboard() {
   const toast = useToast();
   const { user } = useUser();
   const { t } = useLanguage();
+  const [backendHealth, setBackendHealth] = useState(null);
+
+  // Check Spring Boot Backend Health on Mount
+  useEffect(() => {
+    let isMounted = true;
+    getHealthStatus()
+      .then((data) => {
+        if (isMounted) {
+          setBackendHealth(data);
+        }
+      })
+      .catch(() => {
+        // Backend offline or unreachable — fails gracefully without interrupting UI
+        if (isMounted) {
+          setBackendHealth(null);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Sync Planner & Health Check Handler
+  const handleSyncPlanner = async () => {
+    try {
+      const res = await getHealthStatus();
+      setBackendHealth(res);
+      toast.success(`Backend synchronized: ${res.application} (${res.status})`);
+    } catch {
+      toast.warning('Backend is currently offline or unreachable.');
+    }
+  };
 
   // Greeting based on time of day
   const getGreeting = () => {
@@ -255,6 +289,13 @@ export default function Dashboard() {
               <Sparkles className="w-3 h-3 text-primary-600" />
               <span>AI Study Workspace</span>
             </span>
+
+            {backendHealth?.status === 'UP' && (
+              <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100 inline-flex items-center gap-1.5 animate-in fade-in duration-300">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Backend Connected</span>
+              </span>
+            )}
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
@@ -270,7 +311,7 @@ export default function Dashboard() {
           <Button
             variant="outline"
             size="md"
-            onClick={() => toast.info('Syncing revision planner with calendar...')}
+            onClick={handleSyncPlanner}
             iconLeft={RefreshCw}
             className="text-xs font-semibold"
           >
