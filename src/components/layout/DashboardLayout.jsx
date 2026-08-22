@@ -3,6 +3,7 @@ import { Menu, Bell, Search, Sparkles, CheckCircle2, BookOpen, Layers } from 'lu
 import { Link } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { useToast } from '../ui/Toast';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function DashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -10,6 +11,7 @@ export default function DashboardLayout({ children }) {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const notificationRef = useRef(null);
   const toast = useToast();
+  const { t } = useLanguage();
 
   // Close notification popover on outside click
   useEffect(() => {
@@ -90,7 +92,7 @@ export default function DashboardLayout({ children }) {
               </div>
               <input
                 type="text"
-                placeholder="Search topics, notes, flashcards, mind maps... (Press Enter)"
+                placeholder={t('common.searchPlaceholder', {}, 'Search topics, notes, flashcards, mind maps... (Press Enter)')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-12 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl transition-all duration-200 outline-none placeholder-slate-400 focus:bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-100/50"
@@ -109,7 +111,7 @@ export default function DashboardLayout({ children }) {
               className="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold text-primary-600 bg-primary-50 hover:bg-primary-100 border border-primary-200 px-3 py-1.5 rounded-xl transition-colors"
             >
               <BookOpen className="w-3.5 h-3.5" />
-              <span>Upload Notes</span>
+              <span>{t('common.uploadNotes', {}, 'Upload Notes')}</span>
             </Link>
 
             {/* Notification Bell with Flyout */}
@@ -128,7 +130,7 @@ export default function DashboardLayout({ children }) {
                 <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl border border-slate-200 bg-white shadow-xl z-50 animate-in fade-in zoom-in-95 duration-150 overflow-hidden">
                   <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
                     <h4 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                      <span>Notifications</span>
+                      <span>{t('common.notifications', {}, 'Notifications')}</span>
                       <span className="text-[10px] px-1.5 py-0.5 bg-primary-100 text-primary-700 font-bold rounded-full">
                         2 new
                       </span>

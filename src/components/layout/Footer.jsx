@@ -2,7 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { BrainCircuit } from 'lucide-react';
 
+import { useLanguage } from '../../context/LanguageContext';
+
 export default function Footer() {
+  const { t } = useLanguage();
+
   return (
     <footer className="bg-white border-t border-slate-100 py-12 md:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -28,19 +32,19 @@ export default function Footer() {
           {/* Navigation Links */}
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm font-medium text-slate-600">
             <Link to="/features" className="hover:text-primary-600 transition-colors">
-              Features
+              {t('titles.features', {}, 'Features')}
             </Link>
             <Link to="/how-it-works" className="hover:text-primary-600 transition-colors">
-              How It Works
+              {t('titles.howItWorks', {}, 'How It Works')}
             </Link>
             <Link to="/about" className="hover:text-primary-600 transition-colors">
-              About
+              {t('titles.about', {}, 'About')}
             </Link>
             <Link to="/login" className="hover:text-primary-600 transition-colors">
-              Login
+              {t('auth.login', {}, 'Login')}
             </Link>
             <Link to="/register" className="hover:text-primary-600 transition-colors">
-              Register
+              {t('auth.register', {}, 'Register')}
             </Link>
           </div>
         </div>

@@ -9,6 +9,17 @@
       name="description"
       content="Mind Mapr is a student revision platform that helps students organize study materials, create summaries, build mind maps, practice with flashcards and quizzes, and plan revision."
     />
+    <script>
+      (function() {
+        try {
+          var theme = localStorage.getItem('mindmapr_theme_v1') || 'light';
+          var isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var root = document.documentElement;
+          root.setAttribute('data-theme', isDark ? 'dark' : 'light');
+          if (isDark) root.classList.add('dark');
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

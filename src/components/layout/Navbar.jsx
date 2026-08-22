@@ -3,18 +3,20 @@ import { Link, useLocation } from 'react-router-dom';
 import { BrainCircuit, Menu, X } from 'lucide-react';
 import Button from '../ui/Button';
 import { useUser } from '../../context/UserContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function Navbar() {
   const location = useLocation();
   const { isLoggedIn } = useUser();
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = React.useState(false);
 
   const isActive = (path) => location.pathname === path;
 
   const navLinks = [
-    { label: 'Features', path: '/features' },
-    { label: 'How It Works', path: '/how-it-works' },
-    { label: 'About', path: '/about' },
+    { label: t('titles.features', {}, 'Features'), path: '/features' },
+    { label: t('titles.howItWorks', {}, 'How It Works'), path: '/how-it-works' },
+    { label: t('titles.about', {}, 'About'), path: '/about' },
   ];
 
   return (
@@ -59,12 +61,12 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             <Link to="/login">
               <Button variant="ghost" size="sm">
-                Log in
+                {t('auth.login', {}, 'Log in')}
               </Button>
             </Link>
             <Link to="/register">
               <Button variant="primary" size="sm">
-                Get Started
+                {t('auth.signUp', {}, 'Get Started')}
               </Button>
             </Link>
           </div>
@@ -105,12 +107,12 @@ export default function Navbar() {
             <div className="grid grid-cols-2 gap-3 mt-1">
               <Link to="/login" onClick={() => setIsOpen(false)}>
                 <Button variant="outline" size="sm" className="w-full">
-                  Log in
+                  {t('auth.login', {}, 'Log in')}
                 </Button>
               </Link>
               <Link to="/register" onClick={() => setIsOpen(false)}>
                 <Button variant="primary" size="sm" className="w-full">
-                  Sign up
+                  {t('auth.signUp', {}, 'Sign up')}
                 </Button>
               </Link>
             </div>

@@ -17,32 +17,34 @@ import {
   BrainCircuit,
 } from 'lucide-react';
 import { useUser } from '../../context/UserContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function Sidebar({ isOpen, setIsOpen }) {
   const location = useLocation();
   const { user, isLoggedIn } = useUser();
+  const { t } = useLanguage();
 
   const isActive = (path) => location.pathname === path;
 
   // Primary Navigation matching user requirements
   const navigationItems = [
-    { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { label: 'My Materials', path: '/materials', icon: FolderOpen },
-    { label: 'Upload Material', path: '/upload', icon: UploadCloud },
-    { label: 'Mind Maps', path: '/mind-map', icon: Network },
-    { label: 'Summaries', path: '/summary', icon: FileText },
-    { label: 'Flashcards', path: '/flashcards', icon: Layers },
-    { label: 'Quizzes', path: '/quiz', icon: GraduationCap },
-    { label: 'Important Topics', path: '/important-topics', icon: Bookmark },
-    { label: 'Revision Plan', path: '/revision-plan', icon: Calendar },
-    { label: 'Progress', path: '/progress', icon: LineChart },
+    { key: 'dashboard', label: t('nav.dashboard', {}, 'Dashboard'), path: '/dashboard', icon: LayoutDashboard },
+    { key: 'materials', label: t('nav.materials', {}, 'My Materials'), path: '/materials', icon: FolderOpen },
+    { key: 'upload', label: t('nav.upload', {}, 'Upload Material'), path: '/upload', icon: UploadCloud },
+    { key: 'mindmaps', label: t('nav.mindmaps', {}, 'Mind Maps'), path: '/mind-map', icon: Network },
+    { key: 'summaries', label: t('nav.summaries', {}, 'Summaries'), path: '/summary', icon: FileText },
+    { key: 'flashcards', label: t('nav.flashcards', {}, 'Flashcards'), path: '/flashcards', icon: Layers },
+    { key: 'quizzes', label: t('nav.quizzes', {}, 'Quizzes'), path: '/quiz', icon: GraduationCap },
+    { key: 'importantTopics', label: t('nav.importantTopics', {}, 'Important Topics'), path: '/important-topics', icon: Bookmark },
+    { key: 'revisionPlan', label: t('nav.revisionPlan', {}, 'Revision Plan'), path: '/revision-plan', icon: Calendar },
+    { key: 'progress', label: t('nav.progress', {}, 'Progress'), path: '/progress', icon: LineChart },
   ];
 
   // Bottom Navigation matching user requirements
   const bottomItems = [
-    { label: 'Profile', path: '/profile', icon: User },
-    { label: 'Settings', path: '/settings', icon: Settings },
-    { label: 'Logout', path: '/login', icon: LogOut, isDanger: true },
+    { key: 'profile', label: t('nav.profile', {}, 'Profile'), path: '/profile', icon: User },
+    { key: 'settings', label: t('nav.settings', {}, 'Settings'), path: '/settings', icon: Settings },
+    { key: 'logout', label: t('nav.logout', {}, 'Logout'), path: '/login', icon: LogOut, isDanger: true },
   ];
 
   return (
@@ -86,7 +88,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
         <nav className="flex-1 overflow-y-auto px-3.5 py-4 flex flex-col gap-1">
           <div className="px-3 pb-1.5 flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-              Study Navigation
+              {t('nav.studyNavigation', {}, 'STUDY NAVIGATION')}
             </span>
           </div>
 
@@ -107,7 +109,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                 `}
               >
                 <Icon className={`w-4.5 h-4.5 shrink-0 ${active ? 'text-primary-600' : 'text-slate-400'}`} />
-                <span>{item.label}</span>
+                <span className="truncate">{item.label}</span>
               </Link>
             );
           })}
@@ -116,7 +118,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
         {/* Bottom Account & Settings Navigation */}
         <div className="p-3.5 border-t border-slate-100 bg-slate-50/70 flex flex-col gap-1 shrink-0">
           <span className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-            Account
+            {t('nav.account', {}, 'ACCOUNT')}
           </span>
 
           {bottomItems.map((item) => {
@@ -126,7 +128,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
 
             return (
               <Link
-                key={item.label}
+                key={item.key}
                 to={item.path}
                 onClick={() => setIsOpen(false)}
                 className={`
@@ -140,7 +142,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                 `}
               >
                 <Icon className={`w-4 h-4 shrink-0 ${isDanger ? 'text-red-500' : active ? 'text-primary-600' : 'text-slate-400'}`} />
-                <span>{item.label}</span>
+                <span className="truncate">{item.label}</span>
               </Link>
             );
           })}

@@ -28,29 +28,7 @@ import Profile from '../pages/Profile';
 import Settings from '../pages/Settings';
 import AIAnalysis from '../pages/AIAnalysis';
 
-// Route Document Title Map
-const routeTitles = {
-  '/': 'Mind Mapr — Student Revision Platform',
-  '/features': 'Features | Mind Mapr',
-  '/how-it-works': 'How Mind Mapr Works | Mind Mapr',
-  '/about': 'About Mind Mapr | Mind Mapr',
-  '/login': 'Sign In | Mind Mapr',
-  '/register': 'Create Account | Mind Mapr',
-  '/dashboard': 'Dashboard | Mind Mapr',
-  '/upload': 'Upload Materials | Mind Mapr',
-  '/materials': 'My Materials | Mind Mapr',
-  '/summary': 'Summaries | Mind Mapr',
-  '/mind-map': 'Mind Maps | Mind Mapr',
-  '/flashcards': 'Flashcards | Mind Mapr',
-  '/quiz': 'Quizzes | Mind Mapr',
-  '/quiz-result': 'Quiz Results | Mind Mapr',
-  '/important-topics': 'Important Topics | Mind Mapr',
-  '/revision-plan': 'Revision Plan | Mind Mapr',
-  '/progress': 'Progress | Mind Mapr',
-  '/profile': 'My Profile | Mind Mapr',
-  '/settings': 'Settings | Mind Mapr',
-  '/ai-analysis': 'AI Study Analysis | Mind Mapr',
-};
+import { useLanguage } from '../context/LanguageContext';
 
 // Public Layout Wrapper (adds top Navbar and Footer)
 function PublicLayout() {
@@ -76,12 +54,40 @@ function AuthLayout() {
 
 export default function AppRoutes() {
   const location = useLocation();
+  const { t, language } = useLanguage();
 
-  // Dynamically update document title on every route change
+  // Dynamically update document title on every route change or language change
   useEffect(() => {
-    const title = routeTitles[location.pathname] || 'Mind Mapr — Student Revision Platform';
-    document.title = title;
-  }, [location.pathname]);
+    const pathToKey = {
+      '/': 'titles.home',
+      '/features': 'titles.features',
+      '/how-it-works': 'titles.howItWorks',
+      '/about': 'titles.about',
+      '/login': 'titles.login',
+      '/register': 'titles.register',
+      '/dashboard': 'titles.dashboard',
+      '/upload': 'titles.upload',
+      '/materials': 'titles.materials',
+      '/summary': 'titles.summary',
+      '/mind-map': 'titles.mindmap',
+      '/flashcards': 'titles.flashcards',
+      '/quiz': 'titles.quiz',
+      '/quiz-result': 'titles.quizResult',
+      '/important-topics': 'titles.importantTopics',
+      '/revision-plan': 'titles.revisionPlan',
+      '/progress': 'titles.progress',
+      '/profile': 'titles.profile',
+      '/settings': 'titles.settings',
+      '/ai-analysis': 'titles.analysis',
+    };
+
+    const titleKey = pathToKey[location.pathname];
+    if (titleKey) {
+      document.title = t(titleKey, {}, 'Mind Mapr — Student Revision Platform');
+    } else {
+      document.title = 'Mind Mapr — Student Revision Platform';
+    }
+  }, [location.pathname, language, t]);
 
   return (
     <Routes>

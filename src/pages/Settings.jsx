@@ -12,7 +12,6 @@ import {
   ShieldCheck,
   Sliders,
   ArrowRight,
-  Info,
   Sparkles,
   User,
   AlertTriangle,
@@ -27,6 +26,8 @@ import Badge from '../components/ui/Badge';
 import Modal from '../components/ui/Modal';
 import { useToast } from '../components/ui/Toast';
 import { useUser } from '../context/UserContext';
+import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../context/LanguageContext';
 
 const STORAGE_KEY = 'mindmapr_settings_v1';
 
@@ -114,6 +115,8 @@ export default function Settings() {
   const navigate = useNavigate();
   const toast = useToast();
   const { user } = useUser();
+  const { theme, setTheme } = useTheme();
+  const { language, setLanguage, t, availableLanguages } = useLanguage();
 
   // Active Tab: 'general' | 'study' | 'learning' | 'notifications' | 'privacy' | 'account'
   const [activeTab, setActiveTab] = useState('general');
@@ -156,22 +159,39 @@ export default function Settings() {
     }
   };
 
+  // Handle Theme Change
+  const handleThemeChange = (selectedTheme) => {
+    const themeLower = selectedTheme.toLowerCase();
+    setTheme(themeLower);
+    updateSetting('theme', selectedTheme);
+    toast.success(t('toasts.themeUpdated', { theme: selectedTheme }, `Theme updated to ${selectedTheme}.`));
+  };
+
+  // Handle Language Change
+  const handleLanguageChange = (selectedLang) => {
+    setLanguage(selectedLang);
+    updateSetting('language', selectedLang);
+    toast.success(t('toasts.languageUpdated', { language: selectedLang }, `Language changed to ${selectedLang}.`));
+  };
+
   // Reset all settings to defaults
   const handleResetSettingsConfirm = () => {
     setSettings(defaultSettings);
+    setTheme('light');
+    setLanguage('English');
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultSettings));
     } catch {
       // Ignore
     }
     setIsResetModalOpen(false);
-    toast.success('Settings restored to defaults.');
+    toast.success(t('toasts.settingsSaved', {}, 'Settings restored to defaults.'));
   };
 
   // Sign out confirmation handler
   const handleSignOutConfirm = () => {
     setIsSignOutModalOpen(false);
-    toast.success('Signed out successfully.');
+    toast.success(t('toasts.signedOut', {}, 'Signed out successfully.'));
     navigate('/login');
   };
 
@@ -185,37 +205,37 @@ export default function Settings() {
   const tabs = [
     {
       id: 'general',
-      label: 'General',
-      description: 'Language & appearance',
+      label: t('settings.general', {}, 'General'),
+      description: t('settings.appearanceSubtitle', {}, 'Language & appearance'),
       icon: Globe,
     },
     {
       id: 'study',
-      label: 'Study Preferences',
+      label: t('settings.studyPreferences', {}, 'Study Preferences'),
       description: 'Targets, times & focus',
       icon: Target,
     },
     {
       id: 'learning',
-      label: 'Quiz & Learning',
+      label: t('settings.quizLearning', {}, 'Quiz & Learning'),
       description: 'Quizzes & flashcards',
       icon: GraduationCap,
     },
     {
       id: 'notifications',
-      label: 'Notifications',
+      label: t('settings.notifications', {}, 'Notifications'),
       description: 'Study alerts & reminders',
       icon: Bell,
     },
     {
       id: 'privacy',
-      label: 'Privacy & AI',
+      label: t('settings.privacy', {}, 'Privacy & AI'),
       description: 'Activity & data controls',
       icon: ShieldCheck,
     },
     {
       id: 'account',
-      label: 'Account & System',
+      label: t('settings.account', {}, 'Account & System'),
       description: 'Profile, sign out & reset',
       icon: Sliders,
     },
@@ -228,14 +248,14 @@ export default function Settings() {
       {/* ========================================================================= */}
       <div>
         <BackButton
-          label="Back"
+          label={t('common.back', {}, 'Back')}
           fallback="/dashboard"
           to={location.state?.from || '/dashboard'}
         />
 
         <PageHeader
-          title="Settings"
-          description="Customize your Mind Mapr experience and study preferences."
+          title={t('settings.title', {}, 'Settings')}
+          description={t('settings.description', {}, 'Customize your Mind Mapr experience and study preferences.')}
         >
           <div className="flex items-center gap-2">
             <Link to="/profile">
@@ -245,7 +265,7 @@ export default function Settings() {
                 iconLeft={User}
                 className="font-semibold text-xs cursor-pointer"
               >
-                My Profile
+                {t('nav.profile', {}, 'My Profile')}
               </Button>
             </Link>
           </div>
@@ -347,8 +367,8 @@ export default function Settings() {
                     <Globe className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-slate-900">General Settings</h3>
-                    <p className="text-xs text-slate-500">Configure application language and theme appearance.</p>
+                    <h3 className="text-base font-bold text-slate-900">{t('settings.general', {}, 'General Settings')}</h3>
+                    <p className="text-xs text-slate-500">{t('settings.description', {}, 'Configure application language and theme appearance.')}</p>
                   </div>
                 </CardHeader>
 
@@ -357,45 +377,35 @@ export default function Settings() {
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between">
                       <label className="text-sm font-bold text-slate-800">
-                        Language
+                        {t('settings.language', {}, 'Language')}
                       </label>
                       <Badge variant="primary" className="text-xs">
-                        {settings.language}
+                        {language}
                       </Badge>
                     </div>
                     <p className="text-xs text-slate-500">
-                      Choose your preferred interface language.
+                      {t('settings.languageSubtitle', {}, 'Choose your preferred interface language.')}
                     </p>
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-1">
-                      {[
-                        'English',
-                        'Telugu',
-                        'Hindi',
-                        'Tamil',
-                        'Kannada',
-                        'Malayalam',
-                        'Marathi',
-                        'Bengali',
-                      ].map((lang) => (
-                        <button
-                          key={lang}
-                          type="button"
-                          onClick={() => updateSetting('language', lang, `Language set to ${lang}`)}
-                          className={`p-3 rounded-xl border text-xs font-bold transition-all text-center cursor-pointer ${
-                            settings.language === lang
-                              ? 'border-primary-500 bg-primary-50/80 text-primary-800 shadow-2xs ring-1 ring-primary-500/20'
-                              : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300'
-                          }`}
-                        >
-                          {lang}
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="flex items-center gap-2 mt-2 p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs text-slate-500">
-                      <Info className="w-4 h-4 text-slate-400 shrink-0" />
-                      <span>More language support will be available in a future release.</span>
+                      {availableLanguages.map((langItem) => {
+                        const isSelected = language === langItem.id || language === langItem.name;
+                        return (
+                          <button
+                            key={langItem.id}
+                            type="button"
+                            onClick={() => handleLanguageChange(langItem.id)}
+                            className={`p-3 rounded-xl border text-xs font-bold transition-all text-center cursor-pointer ${
+                              isSelected
+                                ? 'border-primary-500 bg-primary-50/80 text-primary-800 shadow-2xs ring-1 ring-primary-500/20'
+                                : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300'
+                            }`}
+                          >
+                            <span className="block">{langItem.name}</span>
+                            <span className="block text-[10px] text-slate-400 font-normal mt-0.5">{langItem.nativeName}</span>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
 
@@ -405,29 +415,29 @@ export default function Settings() {
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between">
                       <label className="text-sm font-bold text-slate-800">
-                        Appearance Theme
+                        {t('settings.appearance', {}, 'Appearance Theme')}
                       </label>
-                      <Badge variant="neutral" className="text-xs">
-                        {settings.theme}
+                      <Badge variant="neutral" className="text-xs capitalize">
+                        {theme}
                       </Badge>
                     </div>
                     <p className="text-xs text-slate-500">
-                      Select your preferred workspace theme.
+                      {t('settings.appearanceSubtitle', {}, 'Select your preferred workspace theme.')}
                     </p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-1">
                       {[
-                        { id: 'Light', label: 'Light', icon: Sun, desc: 'Default bright and crisp' },
-                        { id: 'Dark', label: 'Dark', icon: Moon, desc: 'Reduced glare for evening study' },
-                        { id: 'System', label: 'System', icon: Monitor, desc: 'Sync with device preferences' },
+                        { id: 'Light', label: t('settings.light', {}, 'Light'), icon: Sun, desc: t('settings.lightDesc', {}, 'Default bright and crisp') },
+                        { id: 'Dark', label: t('settings.dark', {}, 'Dark'), icon: Moon, desc: t('settings.darkDesc', {}, 'Reduced glare for low light') },
+                        { id: 'System', label: t('settings.system', {}, 'System'), icon: Monitor, desc: t('settings.systemDesc', {}, 'Sync with device preferences') },
                       ].map((th) => {
                         const Icon = th.icon;
-                        const isSelected = settings.theme === th.id;
+                        const isSelected = theme.toLowerCase() === th.id.toLowerCase();
                         return (
                           <button
                             key={th.id}
                             type="button"
-                            onClick={() => updateSetting('theme', th.id, `Theme updated to ${th.label}`)}
+                            onClick={() => handleThemeChange(th.id)}
                             className={`p-4 rounded-xl border flex flex-col items-center text-center gap-2 transition-all cursor-pointer ${
                               isSelected
                                 ? 'border-primary-500 bg-primary-50/80 text-primary-900 ring-1 ring-primary-500/20 shadow-2xs'
@@ -963,10 +973,10 @@ export default function Settings() {
                       variant="danger"
                       size="sm"
                       iconLeft={Trash2}
-                      onClick={() => setIsDeleteAccountModalOpen(true)}
+                      onClick={() => setIsDeleteModalOpen(true)}
                       className="font-semibold text-xs cursor-pointer shadow-xs"
                     >
-                      Delete Account
+                      {t('settings.deleteAccount', {}, 'Delete Account')}
                     </Button>
                   </CardContent>
                 </Card>

@@ -24,24 +24,23 @@ import Badge from '../components/ui/Badge';
 import ProgressBar from '../components/ui/ProgressBar';
 import { useToast } from '../components/ui/Toast';
 import { useUser } from '../context/UserContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Dashboard() {
   const toast = useToast();
   const { user } = useUser();
+  const { t } = useLanguage();
 
   // Greeting based on time of day
   const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 18) return 'Good afternoon';
-    return 'Good evening';
+    return t('dashboard.welcomeBack', { name: user.name }, `Welcome back, ${user.name}! 👋`);
   };
 
   // Performance statistics cards
   const stats = [
     {
       id: 'mastery',
-      title: 'Overall Mastery',
+      title: t('dashboard.overallMastery', {}, 'Overall Mastery'),
       value: '74%',
       detail: '+4% improvement this week',
       icon: Award,
@@ -50,7 +49,7 @@ export default function Dashboard() {
     },
     {
       id: 'topics',
-      title: 'Topics Studied',
+      title: t('dashboard.topicsStudied', {}, 'Topics Studied'),
       value: '48 / 65',
       detail: '73% semester syllabus covered',
       icon: Bookmark,
@@ -59,7 +58,7 @@ export default function Dashboard() {
     },
     {
       id: 'score',
-      title: 'Quiz Score',
+      title: t('dashboard.quizScore', {}, 'Quiz Score'),
       value: '86% Avg',
       detail: '14 adaptive quizzes completed',
       icon: GraduationCap,
@@ -68,8 +67,8 @@ export default function Dashboard() {
     },
     {
       id: 'streak',
-      title: 'Current Streak',
-      value: '7 Days 🔥',
+      title: t('dashboard.currentStreak', {}, 'Current Streak'),
+      value: `7 ${t('common.days', {}, 'Days')} 🔥`,
       detail: 'Personal record: 12 days',
       icon: Flame,
       color: 'bg-amber-50 text-amber-600 border-amber-100',
@@ -259,10 +258,10 @@ export default function Dashboard() {
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            {getGreeting()}, {user.name}! 👋
+            {getGreeting()}
           </h1>
           <p className="text-sm sm:text-base text-slate-500 mt-1 max-w-xl">
-            Here's what your revision looks like today. You have 3 topics queued for spaced recall.
+            {t('dashboard.greetingSubtitle', {}, "Here's what your revision looks like today. You have 3 topics queued for spaced recall.")}
           </p>
         </div>
 
@@ -275,7 +274,7 @@ export default function Dashboard() {
             iconLeft={RefreshCw}
             className="text-xs font-semibold"
           >
-            Sync Planner
+            {t('common.syncPlanner', {}, 'Sync Planner')}
           </Button>
 
           <Link to="/upload">
@@ -285,7 +284,7 @@ export default function Dashboard() {
               iconLeft={Plus}
               className="text-xs font-semibold shadow-sm shadow-primary-500/20"
             >
-              Upload Material
+              {t('common.uploadMaterial', {}, 'Upload Material')}
             </Button>
           </Link>
         </div>
@@ -298,14 +297,14 @@ export default function Dashboard() {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <h2 className="text-base font-bold text-slate-900 tracking-tight">
-              Study Performance Overview
+              {t('dashboard.studyOverview', {}, 'Study Performance Overview')}
             </h2>
           </div>
           <Link
             to="/progress"
             className="text-xs font-semibold text-primary-600 hover:text-primary-700 inline-flex items-center gap-1"
           >
-            <span>Detailed Analytics</span>
+            <span>{t('dashboard.detailedAnalytics', {}, 'Detailed Analytics')}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>

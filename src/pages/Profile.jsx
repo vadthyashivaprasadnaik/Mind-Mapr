@@ -35,11 +35,13 @@ import Input from '../components/ui/Input';
 import Modal from '../components/ui/Modal';
 import { useToast } from '../components/ui/Toast';
 import { useUser } from '../context/UserContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Profile() {
   const location = useLocation();
   const toast = useToast();
   const { user, updateUser } = useUser();
+  const { t } = useLanguage();
 
   // Edit Personal Details State
   const [isEditingPersonal, setIsEditingPersonal] = useState(false);
@@ -255,14 +257,14 @@ export default function Profile() {
       {/* ========================================================================= */}
       <div>
         <BackButton
-          label="Back"
+          label={t('common.back', {}, 'Back')}
           fallback="/dashboard"
           to={location.state?.from || '/dashboard'}
         />
 
         <PageHeader
-          title="My Profile"
-          description="Manage your personal information and learning profile."
+          title={t('profile.title', {}, 'My Profile')}
+          description={t('profile.description', {}, 'Manage your personal information and learning profile.')}
         >
           <div className="flex items-center gap-2">
             <Link to="/settings">
@@ -272,7 +274,7 @@ export default function Profile() {
                 iconLeft={Settings}
                 className="font-semibold text-xs cursor-pointer"
               >
-                Settings
+                {t('nav.settings', {}, 'Settings')}
               </Button>
             </Link>
           </div>

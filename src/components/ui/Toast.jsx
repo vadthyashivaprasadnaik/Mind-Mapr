@@ -53,24 +53,24 @@ function ToastItem({ toast, onClose }) {
 
   const styles = {
     success: {
-      bg: 'bg-green-50 border-green-200 text-green-800',
-      icon: <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0" />,
+      bg: 'bg-green-50 border-green-200 text-green-800 dark:bg-emerald-950/90 dark:border-emerald-800/80 dark:text-emerald-200',
+      icon: <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-emerald-400 shrink-0" />,
     },
     error: {
-      bg: 'bg-red-50 border-red-200 text-red-800',
-      icon: <XCircleWrapper className="w-5 h-5 text-red-600 shrink-0" />,
+      bg: 'bg-red-50 border-red-200 text-red-800 dark:bg-red-950/90 dark:border-red-800/80 dark:text-red-200',
+      icon: <XCircleWrapper className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0" />,
     },
     warning: {
-      bg: 'bg-amber-50 border-amber-200 text-amber-800',
-      icon: <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />,
+      bg: 'bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/90 dark:border-amber-800/80 dark:text-amber-200',
+      icon: <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />,
     },
     info: {
-      bg: 'bg-blue-50 border-blue-200 text-blue-800',
-      icon: <Info className="w-5 h-5 text-blue-600 shrink-0" />,
+      bg: 'bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-950/90 dark:border-blue-800/80 dark:text-blue-200',
+      icon: <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0" />,
     },
   }[type] || {
-    bg: 'bg-slate-50 border-slate-200 text-slate-800',
-    icon: <Info className="w-5 h-5 text-slate-600 shrink-0" />,
+    bg: 'bg-slate-50 border-slate-200 text-slate-800 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-100',
+    icon: <Info className="w-5 h-5 text-slate-600 dark:text-slate-400 shrink-0" />,
   };
 
   return (
