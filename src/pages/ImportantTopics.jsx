@@ -7,13 +7,11 @@ import {
   ArrowRight,
   Flame,
   CheckCircle2,
-  AlertTriangle,
   FileText,
   Network,
   Layers,
   GraduationCap,
   Info,
-  RefreshCw,
   Zap,
   Check,
   X,
@@ -30,14 +28,10 @@ import Badge from '../components/ui/Badge';
 import Input from '../components/ui/Input';
 import ProgressBar from '../components/ui/ProgressBar';
 import Modal from '../components/ui/Modal';
-import EmptyState from '../components/ui/EmptyState';
-import LoadingState from '../components/ui/LoadingState';
-import { useToast } from '../components/ui/Toast';
 
 export default function ImportantTopics() {
   const location = useLocation();
   const navigate = useNavigate();
-  const toast = useToast();
 
   // Active Material (passed from route state or default realistic demo data)
   const defaultMaterial = {
@@ -52,12 +46,6 @@ export default function ImportantTopics() {
   };
 
   const material = location.state?.material || defaultMaterial;
-
-  // View state: 'ready' | 'loading' | 'empty' | 'error'
-  const [viewState, setViewState] = useState('ready');
-
-  // Simulation mode for testing edge states: null | 'no-quiz'
-  const [noQuizSimulated, setNoQuizSimulated] = useState(false);
 
   // Search, filter & sort states
   const [searchQuery, setSearchQuery] = useState('');
@@ -278,22 +266,6 @@ export default function ImportantTopics() {
   // Compute Processed Topics with Dynamic Priority Rules
   const processedTopics = useMemo(() => {
     return baseTopics.map((topic) => {
-      // If simulated no-quiz data, use fallback demo priority without score
-      if (noQuizSimulated) {
-        return {
-          ...topic,
-          performance: null,
-          priority: topic.defaultPriority,
-          status: 'Estimated',
-          statusVariant:
-            topic.defaultPriority === 'High'
-              ? 'danger'
-              : topic.defaultPriority === 'Medium'
-                ? 'warning'
-                : 'success',
-        };
-      }
-
       const score = topic.basePerformance;
       let priority = 'High';
       let status = 'Needs Attention';
@@ -325,7 +297,7 @@ export default function ImportantTopics() {
         statusVariant,
       };
     });
-  }, [baseTopics, noQuizSimulated]);
+  }, [baseTopics]);
 
   // Priority Counts for Metric Summary Cards
   const priorityCounts = useMemo(() => {
@@ -614,84 +586,7 @@ export default function ImportantTopics() {
           title="Important Topics"
           description="Focus your revision on the concepts that matter most."
         >
-          {/* Dev / Tester State Controls */}
           <div className="flex items-center gap-2">
-            <div className="hidden lg:flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs">
-              <button
-                type="button"
-                onClick={() => {
-                  setViewState('ready');
-                  setNoQuizSimulated(false);
-                  toast.info('Viewing standard revision priority data');
-                }}
-                className={`px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
-                  viewState === 'ready' && !noQuizSimulated
-                    ? 'bg-white text-slate-900 shadow-2xs font-bold'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                Ready
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setViewState('ready');
-                  setNoQuizSimulated(true);
-                  toast.info('Simulating unattempted quiz state');
-                }}
-                className={`px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
-                  noQuizSimulated
-                    ? 'bg-white text-amber-700 shadow-2xs font-bold'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                No Quiz
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setViewState('loading');
-                  toast.info('Simulating loading state...');
-                  setTimeout(() => setViewState('ready'), 1400);
-                }}
-                className={`px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
-                  viewState === 'loading'
-                    ? 'bg-white text-primary-700 shadow-2xs font-bold'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                Loading
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setViewState('empty');
-                  toast.info('Simulating empty topics state');
-                }}
-                className={`px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
-                  viewState === 'empty'
-                    ? 'bg-white text-slate-900 shadow-2xs font-bold'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                Empty
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setViewState('error');
-                  toast.error('Simulating error state');
-                }}
-                className={`px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
-                  viewState === 'error'
-                    ? 'bg-white text-red-700 shadow-2xs font-bold'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                Error
-              </button>
-            </div>
-
             <Link to="/ai-analysis">
               <Button
                 variant="outline"
@@ -735,78 +630,42 @@ export default function ImportantTopics() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
-            <Badge variant="primary" className="gap-1.5 px-3 py-1 text-xs">
-              <Sparkles className="w-3.5 h-3.5 text-primary-600" />
-              <span>AI Generated</span>
-            </Badge>
+          {/* Material Stats Summary */}
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+            <div className="text-left sm:text-right">
+              <span className="text-xs text-slate-400 font-medium block">Key Topics</span>
+              <span className="text-sm font-extrabold text-slate-900">{filteredAndSortedTopics.length} Prioritized</span>
+            </div>
+            <div className="h-7 w-px bg-slate-200 hidden sm:block" />
+            <Link to="/summary" state={{ from: '/important-topics', material }}>
+              <Button
+                variant="outline"
+                size="sm"
+                iconLeft={FileText}
+                className="text-xs font-semibold cursor-pointer"
+              >
+                Summary
+              </Button>
+            </Link>
+            <Link to="/mind-map" state={{ from: '/important-topics', material }}>
+              <Button
+                variant="primary"
+                size="sm"
+                iconLeft={Network}
+                className="text-xs font-semibold cursor-pointer shadow-xs"
+              >
+                Mind Map
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Card>
 
-      {/* ========================================================================= */}
-      {/* 3. CONDITIONAL STATE ROUTING (LOADING | ERROR | EMPTY | READY)             */}
-      {/* ========================================================================= */}
-
-      {/* STAGE: LOADING */}
-      {viewState === 'loading' && (
-        <LoadingState
-          message="Preparing your revision priorities..."
-          description="Synthesizing quiz scores, concept mastery, and syllabus weight."
-          size="lg"
-          className="my-8"
-        />
-      )}
-
-      {/* STAGE: ERROR */}
-      {viewState === 'error' && (
-        <Card className="border-red-200 bg-red-50/30 shadow-sm max-w-xl mx-auto my-8">
-          <CardContent className="p-8 text-center flex flex-col items-center">
-            <div className="w-14 h-14 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center mb-4 border border-red-200">
-              <AlertTriangle className="w-7 h-7" />
-            </div>
-            <h3 className="text-lg font-bold text-slate-900">
-              Unable to load important topics
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-sm">
-              Something went wrong while preparing your revision priorities.
-            </p>
-            <Button
-              variant="primary"
-              size="md"
-              iconLeft={RefreshCw}
-              onClick={() => {
-                setViewState('ready');
-                toast.success('Revision priorities reloaded successfully.');
-              }}
-              className="mt-6 font-semibold text-xs sm:text-sm cursor-pointer shadow-sm"
-            >
-              Try Again
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* STAGE: EMPTY */}
-      {viewState === 'empty' && (
-        <EmptyState
-          icon={Bookmark}
-          title="No Important Topics Yet"
-          description="Analyze a study material to identify topics for revision."
-          actionLabel="Go to My Materials"
-          actionIcon={ArrowRight}
-          onActionClick={() => navigate('/materials')}
-          className="my-8"
-        />
-      )}
-
-      {/* STAGE: READY */}
-      {viewState === 'ready' && (
-        <div className="flex flex-col gap-6 animate-in fade-in duration-200">
+      <div className="flex flex-col gap-6 animate-in fade-in duration-200">
           {/* ===================================================================== */}
           {/* NO QUIZ DATA INFORMATIONAL BANNER (Fallback Mode)                    */}
           {/* ===================================================================== */}
-          {noQuizSimulated && (
+          {!filteredAndSortedTopics.some(t => t.performance !== null) && (
             <Card className="border-amber-200 bg-amber-50/50 shadow-2xs">
               <CardContent className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-start gap-3">
@@ -1342,7 +1201,6 @@ export default function ImportantTopics() {
             <span>Priority levels are not predictions of exam questions.</span>
           </div>
         </div>
-      )}
 
       {/* ========================================================================= */}
       {/* 11. TOPIC DETAILS MODAL                                                   */}

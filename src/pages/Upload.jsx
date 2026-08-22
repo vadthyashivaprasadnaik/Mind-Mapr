@@ -839,71 +839,12 @@ export default function Upload() {
       <section className="mt-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-lg font-bold text-slate-900 tracking-tight">
-                Recent Uploads
-              </h2>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">
-                Demo Data
-              </span>
-            </div>
+            <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+              Recent Uploads
+            </h2>
             <p className="text-xs text-slate-500 mt-0.5">
               Access previously analyzed slide decks and lecture notes.
             </p>
-          </div>
-
-          {/* Quick Clear / Reset Demo Data Button */}
-          <div className="flex items-center gap-2">
-            {recentUploads.length > 0 ? (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  setRecentUploads([]);
-                  toast.info('Cleared recent uploads list (Demo empty state active)');
-                }}
-                iconLeft={Trash2}
-                className="text-xs text-slate-400 hover:text-red-600"
-              >
-                Clear for Demo
-              </Button>
-            ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setRecentUploads([
-                    {
-                      id: 1,
-                      name: 'Operating Systems Notes.pdf',
-                      type: 'PDF',
-                      size: '4.2 MB',
-                      date: 'Today, 9:30 AM',
-                      status: 'Ready',
-                      statusColor: 'success',
-                      mindMapUrl: '/mind-map',
-                      summaryUrl: '/summary',
-                    },
-                    {
-                      id: 2,
-                      name: 'Database Management.pptx',
-                      type: 'PPTX',
-                      size: '8.7 MB',
-                      date: 'Yesterday, 3:15 PM',
-                      status: 'Ready',
-                      statusColor: 'success',
-                      mindMapUrl: '/mind-map',
-                      summaryUrl: '/summary',
-                    },
-                  ]);
-                  toast.success('Restored demo uploads list');
-                }}
-                iconLeft={RefreshCw}
-                className="text-xs"
-              >
-                Restore Demo List
-              </Button>
-            )}
           </div>
         </div>
 

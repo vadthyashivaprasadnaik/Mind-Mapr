@@ -5,7 +5,6 @@ import {
   Clock,
   CheckCircle2,
   Sparkles,
-  ArrowRight,
   Flame,
   FileText,
   Network,
@@ -14,14 +13,12 @@ import {
   Play,
   Sliders,
   Check,
-  AlertTriangle,
   TrendingUp,
   Target,
   Zap,
   CheckCheck,
   CalendarDays,
   Circle,
-  RefreshCw,
   Sun,
   Sunset,
   Moon
@@ -33,8 +30,6 @@ import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import ProgressBar from '../components/ui/ProgressBar';
 import Modal from '../components/ui/Modal';
-import EmptyState from '../components/ui/EmptyState';
-import LoadingState from '../components/ui/LoadingState';
 import { useToast } from '../components/ui/Toast';
 
 export default function RevisionPlan() {
@@ -55,9 +50,6 @@ export default function RevisionPlan() {
   };
 
   const material = location.state?.material || defaultMaterial;
-
-  // View state: 'ready' | 'loading' | 'empty' | 'error'
-  const [viewState, setViewState] = useState('ready');
 
   // Active Selected Day of the Week (Mon..Sun)
   const [selectedDayKey, setSelectedDayKey] = useState('Mon');
@@ -577,80 +569,7 @@ export default function RevisionPlan() {
           title="Revision Planner"
           description="Plan your revision and stay focused on what matters most."
         >
-          {/* Dev / Tester State Controls */}
           <div className="flex items-center gap-2">
-            <div className="hidden lg:flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs">
-              <button
-                type="button"
-                onClick={() => {
-                  setViewState('ready');
-                  toast.info('Viewing active revision plan');
-                }}
-                className={`px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
-                  viewState === 'ready'
-                    ? 'bg-white text-slate-900 shadow-2xs font-bold'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                Ready
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setViewState('loading');
-                  toast.info('Simulating loading state...');
-                  setTimeout(() => setViewState('ready'), 1300);
-                }}
-                className={`px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
-                  viewState === 'loading'
-                    ? 'bg-white text-primary-700 shadow-2xs font-bold'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                Loading
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setViewState('empty');
-                  toast.info('Simulating empty revision plan state');
-                }}
-                className={`px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
-                  viewState === 'empty'
-                    ? 'bg-white text-slate-900 shadow-2xs font-bold'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                Empty
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setViewState('error');
-                  toast.error('Simulating error state');
-                }}
-                className={`px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
-                  viewState === 'error'
-                    ? 'bg-white text-red-700 shadow-2xs font-bold'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                Error
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setWeeklySchedule(initialWeeklySchedule);
-                  setViewState('ready');
-                  toast.success('Reset to default plan.');
-                }}
-                className="px-2.5 py-1 rounded-lg font-medium text-slate-500 hover:text-slate-900 transition cursor-pointer"
-                title="Reset all completed checkboxes"
-              >
-                Reset
-              </button>
-            </div>
-
             <Button
               variant="outline"
               size="sm"
@@ -703,65 +622,7 @@ export default function RevisionPlan() {
         </CardContent>
       </Card>
 
-      {/* ========================================================================= */}
-      {/* 3. CONDITIONAL STATE ROUTING (LOADING | ERROR | EMPTY | READY)             */}
-      {/* ========================================================================= */}
-
-      {/* STAGE: LOADING */}
-      {viewState === 'loading' && (
-        <LoadingState
-          message="Preparing your revision plan..."
-          description="Organizing study sessions based on topic priority, mastery, and optimal spaced intervals."
-          size="lg"
-          className="my-8"
-        />
-      )}
-
-      {/* STAGE: ERROR */}
-      {viewState === 'error' && (
-        <Card className="border-red-200 bg-red-50/30 shadow-sm max-w-xl mx-auto my-8">
-          <CardContent className="p-8 text-center flex flex-col items-center">
-            <div className="w-14 h-14 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center mb-4 border border-red-200">
-              <AlertTriangle className="w-7 h-7" />
-            </div>
-            <h3 className="text-lg font-bold text-slate-900">
-              Unable to load revision plan
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-sm">
-              Something went wrong while preparing your study plan.
-            </p>
-            <Button
-              variant="primary"
-              size="md"
-              iconLeft={RefreshCw}
-              onClick={() => {
-                setViewState('ready');
-                toast.success('Revision plan restored.');
-              }}
-              className="mt-6 font-semibold text-xs sm:text-sm cursor-pointer shadow-sm"
-            >
-              Try Again
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* STAGE: EMPTY */}
-      {viewState === 'empty' && (
-        <EmptyState
-          icon={CalendarDays}
-          title="No Revision Plan Yet"
-          description="Complete some study activity to build your personalized revision plan."
-          actionLabel="View Important Topics"
-          actionIcon={ArrowRight}
-          onActionClick={() => navigate('/important-topics')}
-          className="my-8"
-        />
-      )}
-
-      {/* STAGE: READY */}
-      {viewState === 'ready' && (
-        <div className="flex flex-col gap-6 animate-in fade-in duration-200">
+      <div className="flex flex-col gap-6 animate-in fade-in duration-200">
           {/* ===================================================================== */}
           {/* 4. PLAN OVERVIEW CARD (Heading, Description, 4 Metric Pills)          */}
           {/* ===================================================================== */}
@@ -1376,7 +1237,6 @@ export default function RevisionPlan() {
             </span>
           </div>
         </div>
-      )}
 
       {/* ========================================================================= */}
       {/* 8. FOCUSED START REVISION MODAL                                           */}

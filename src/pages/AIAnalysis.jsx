@@ -240,19 +240,6 @@ export default function AIAnalysis() {
           description="Turning your study material into smart revision resources."
         >
           <div className="flex items-center gap-2.5">
-            {/* Dev / Tester Mock Error Toggle */}
-            <button
-              type="button"
-              onClick={() => {
-                startSimulation(true);
-                toast.info('Triggering simulated error on Step 4...');
-              }}
-              className="hidden sm:inline-flex text-[11px] font-semibold text-slate-400 hover:text-red-600 bg-slate-100 hover:bg-red-50 border border-slate-200 px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer"
-              title="Test error state behavior"
-            >
-              Simulate Error
-            </button>
-
             {/* Back to My Materials CTA */}
             <Link to="/materials">
               <Button

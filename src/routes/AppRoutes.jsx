@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route, Outlet } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, Outlet, useLocation } from 'react-router-dom';
 
 // Layouts
 import Navbar from '../components/layout/Navbar';
@@ -28,6 +28,30 @@ import Profile from '../pages/Profile';
 import Settings from '../pages/Settings';
 import AIAnalysis from '../pages/AIAnalysis';
 
+// Route Document Title Map
+const routeTitles = {
+  '/': 'Mind Mapr — Student Revision Platform',
+  '/features': 'Features | Mind Mapr',
+  '/how-it-works': 'How Mind Mapr Works | Mind Mapr',
+  '/about': 'About Mind Mapr | Mind Mapr',
+  '/login': 'Sign In | Mind Mapr',
+  '/register': 'Create Account | Mind Mapr',
+  '/dashboard': 'Dashboard | Mind Mapr',
+  '/upload': 'Upload Materials | Mind Mapr',
+  '/materials': 'My Materials | Mind Mapr',
+  '/summary': 'Summaries | Mind Mapr',
+  '/mind-map': 'Mind Maps | Mind Mapr',
+  '/flashcards': 'Flashcards | Mind Mapr',
+  '/quiz': 'Quizzes | Mind Mapr',
+  '/quiz-result': 'Quiz Results | Mind Mapr',
+  '/important-topics': 'Important Topics | Mind Mapr',
+  '/revision-plan': 'Revision Plan | Mind Mapr',
+  '/progress': 'Progress | Mind Mapr',
+  '/profile': 'My Profile | Mind Mapr',
+  '/settings': 'Settings | Mind Mapr',
+  '/ai-analysis': 'AI Study Analysis | Mind Mapr',
+};
+
 // Public Layout Wrapper (adds top Navbar and Footer)
 function PublicLayout() {
   return (
@@ -51,6 +75,14 @@ function AuthLayout() {
 }
 
 export default function AppRoutes() {
+  const location = useLocation();
+
+  // Dynamically update document title on every route change
+  useEffect(() => {
+    const title = routeTitles[location.pathname] || 'Mind Mapr — Student Revision Platform';
+    document.title = title;
+  }, [location.pathname]);
+
   return (
     <Routes>
       {/* Public Pages */}

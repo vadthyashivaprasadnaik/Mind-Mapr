@@ -1,16 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, Bell, User, Search, Sparkles, LogOut, Settings, CheckCircle2, BookOpen, Layers } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Menu, Bell, Search, Sparkles, CheckCircle2, BookOpen, Layers } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { useToast } from '../ui/Toast';
-import Dropdown from '../ui/Dropdown';
 
 export default function DashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [notificationOpen, setNotificationOpen] = useState(false);
   const notificationRef = useRef(null);
-  const navigate = useNavigate();
   const toast = useToast();
 
   // Close notification popover on outside click
@@ -64,33 +62,6 @@ export default function DashboardLayout({ children }) {
       toast.info(`Searching study materials for "${searchQuery}"...`);
     }
   };
-
-  const profileDropdownItems = [
-    {
-      label: 'My Profile',
-      icon: User,
-      onClick: () => {
-        navigate('/profile');
-      },
-    },
-    {
-      label: 'Settings',
-      icon: Settings,
-      onClick: () => {
-        navigate('/settings');
-      },
-    },
-    { divider: true },
-    {
-      label: 'Log Out',
-      icon: LogOut,
-      variant: 'danger',
-      onClick: () => {
-        toast.info('Logged out from study workspace');
-        navigate('/login');
-      },
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
@@ -215,30 +186,6 @@ export default function DashboardLayout({ children }) {
                 </div>
               )}
             </div>
-
-            {/* User Profile Dropdown */}
-            <Dropdown
-              align="right"
-              trigger={
-                <button
-                  type="button"
-                  className="flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-xl hover:bg-slate-100 border border-transparent hover:border-slate-200 transition-all cursor-pointer select-none"
-                >
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary-600 to-secondary-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-                    AM
-                  </div>
-                  <div className="text-left hidden sm:block">
-                    <span className="text-xs font-bold text-slate-800 block leading-tight">
-                      Alex Mercer
-                    </span>
-                    <span className="text-[10px] text-slate-400 block leading-tight">
-                      Computer Science
-                    </span>
-                  </div>
-                </button>
-              }
-              items={profileDropdownItems}
-            />
           </div>
         </header>
 

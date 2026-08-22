@@ -2,9 +2,11 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BrainCircuit, Menu, X } from 'lucide-react';
 import Button from '../ui/Button';
+import { useUser } from '../../context/UserContext';
 
 export default function Navbar() {
   const location = useLocation();
+  const { isLoggedIn } = useUser();
   const [isOpen, setIsOpen] = React.useState(false);
 
   const isActive = (path) => location.pathname === path;
@@ -21,7 +23,10 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           {/* Logo */}
           <div className="flex items-center shrink-0">
-            <Link to="/" className="flex items-center gap-2.5 group">
+            <Link
+              to={isLoggedIn ? '/dashboard' : '/'}
+              className="flex items-center gap-2.5 group"
+            >
               <div className="p-2 rounded-xl bg-primary-50 text-primary-600 transition-all duration-300 group-hover:bg-primary-100 group-hover:rotate-6">
                 <BrainCircuit className="w-6 h-6" />
               </div>

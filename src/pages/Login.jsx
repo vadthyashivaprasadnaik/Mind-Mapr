@@ -9,7 +9,6 @@ import {
   LogIn,
   ArrowLeft,
   Sparkles,
-  Zap,
   Layers,
   Target,
   CheckCircle2,
@@ -24,17 +23,19 @@ import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
 import { useToast } from '../components/ui/Toast';
+import { useUser } from '../context/UserContext';
 
 export default function Login() {
   const navigate = useNavigate();
   const toast = useToast();
+  const { login, user } = useUser();
 
   // Form State
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  // Status & Validation States
+  // Validation & Submission States
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
@@ -48,23 +49,20 @@ export default function Login() {
   const [forgotLoading, setForgotLoading] = useState(false);
   const [forgotSuccess, setForgotSuccess] = useState(false);
 
-  // Email format regex validation
-  const validateEmail = (val) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
-  };
-
-  // Form Validation logic
+  // Client-side Validation Function
   const validateForm = () => {
     const newErrors = {};
 
     if (!email.trim()) {
       newErrors.email = 'Email address is required';
-    } else if (!validateEmail(email)) {
-      newErrors.email = 'Please enter a valid email address';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      newErrors.email = 'Please enter a valid academic email address';
     }
 
     if (!password) {
-      newErrors.password = 'Password cannot be empty';
+      newErrors.password = 'Password is required';
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters long';
     }
 
     setErrors(newErrors);
@@ -88,15 +86,6 @@ export default function Login() {
     if (globalError) setGlobalError('');
   };
 
-  // Quick Demo Auto-fill Helper
-  const handleFillDemo = () => {
-    setEmail('alex@mindmapr.edu');
-    setPassword('demoPassword123');
-    setErrors({});
-    setGlobalError('');
-    toast.info('Demo credentials loaded!');
-  };
-
   // Form Submit Handler
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -108,9 +97,9 @@ export default function Login() {
 
     setIsLoading(true);
 
-    // Simulate authentication delay
+    // Simulate authentication
     setTimeout(() => {
-      // Mock Error Trigger check (for testing error states)
+      // Error trigger check
       if (email.toLowerCase() === 'error@mindmapr.com') {
         setIsLoading(false);
         setGlobalError('Invalid email or password. Please check your credentials.');
@@ -118,15 +107,15 @@ export default function Login() {
         return;
       }
 
+      login();
       setIsLoading(false);
       setIsSuccess(true);
-      toast.success('Welcome back, Alex! Redirecting to your dashboard...');
+      toast.success(`Welcome back, ${user.name}! Redirecting to your dashboard...`);
 
-      // Redirect after smooth visual success feedback
       setTimeout(() => {
         navigate('/dashboard');
-      }, 1000);
-    }, 1200);
+      }, 500);
+    }, 600);
   };
 
   // Google OAuth Mock Handler
@@ -336,7 +325,7 @@ export default function Login() {
             <ShieldCheck className="w-4 h-4 text-primary-500" />
             <span>End-to-End Secure Study Environment</span>
           </div>
-          <span>PBL Academic Edition</span>
+          <span>Student Revision Platform</span>
         </div>
       </div>
 
@@ -350,21 +339,9 @@ export default function Login() {
         <div className="w-full max-w-md relative z-10">
           {/* Header Card / Title */}
           <div className="mb-8 text-center sm:text-left">
-            <div className="flex items-center justify-between mb-2">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                Welcome Back
-              </h2>
-              {/* Quick Demo Fill Pill for easy review */}
-              <button
-                type="button"
-                onClick={handleFillDemo}
-                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-primary-600 bg-primary-50 hover:bg-primary-100 border border-primary-200/80 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
-                title="Fill demo credentials for fast testing"
-              >
-                <Zap className="w-3 h-3 text-primary-600" />
-                <span>Auto-fill Demo</span>
-              </button>
-            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
+              Welcome Back
+            </h2>
             <p className="text-sm text-slate-500">
               Continue your smart revision journey.
             </p>
@@ -523,18 +500,6 @@ export default function Login() {
               </svg>
               <span>{isGoogleLoading ? 'Connecting...' : 'Continue with Google'}</span>
             </Button>
-
-            {/* Mobile Auto-Fill Demo Button */}
-            <div className="mt-4 sm:hidden text-center">
-              <button
-                type="button"
-                onClick={handleFillDemo}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary-600 bg-primary-50 hover:bg-primary-100 border border-primary-200/80 px-3 py-1.5 rounded-lg transition-colors cursor-pointer w-full justify-center"
-              >
-                <Zap className="w-3.5 h-3.5 text-primary-600" />
-                <span>Auto-fill Demo Credentials</span>
-              </button>
-            </div>
 
             {/* Bottom Register Link */}
             <div className="mt-6 pt-4 border-t border-slate-100 text-center">

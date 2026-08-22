@@ -17,7 +17,6 @@ import {
   Network,
   GraduationCap,
   Bookmark,
-  RefreshCw,
   Eye,
   FileCode,
   Sliders,
@@ -343,23 +342,6 @@ export default function Materials() {
     );
   };
 
-  // Analyze Action Handler (Simulated AI processing)
-  const handleAnalyzeMaterial = (materialId, title) => {
-    // Set to Analyzing
-    setMaterials((prev) =>
-      prev.map((m) => (m.id === materialId ? { ...m, status: 'Analyzing' } : m))
-    );
-    toast.info(`Analyzing "${title}" with AI...`);
-
-    // Simulate completion after 1.6s
-    setTimeout(() => {
-      setMaterials((prev) =>
-        prev.map((m) => (m.id === materialId ? { ...m, status: 'Ready' } : m))
-      );
-      toast.success(`Analysis complete! Revision resources generated for "${title}".`);
-    }, 1600);
-  };
-
   // Trigger Delete Confirmation Modal
   const handlePromptDelete = (material) => {
     setDeleteTarget(material);
@@ -388,15 +370,6 @@ export default function Materials() {
     setSelectedFilter('All');
     setSelectedSort('newest');
     toast.info('Filters and search cleared');
-  };
-
-  // Restore Default Demo Dataset
-  const handleRestoreDemoData = () => {
-    setMaterials(initialMaterials);
-    setSearchQuery('');
-    setSelectedFilter('All');
-    setSelectedSort('newest');
-    toast.success('Restored 12 demo study materials');
   };
 
   // Sort Dropdown Items
@@ -808,16 +781,6 @@ export default function Materials() {
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleRestoreDemoData}
-            iconLeft={RefreshCw}
-            className="text-xs"
-          >
-            Reset Demo Data
-          </Button>
-
           <Link to="/upload">
             <Button
               variant="primary"
@@ -871,7 +834,7 @@ export default function Materials() {
             <div className="text-xs leading-relaxed">
               <p className="font-semibold text-red-900">Confirm Material Removal</p>
               <p className="text-red-700 mt-0.5">
-                This demo material will be removed from your materials list.
+                This study material will be removed from your materials list.
               </p>
             </div>
           </div>

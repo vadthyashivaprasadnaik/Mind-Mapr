@@ -4,24 +4,17 @@ import {
   BrainCircuit,
   ArrowRight,
   Sparkles,
-  BookOpen,
   Zap,
   Target,
-  FileText,
   Layers,
   FileX,
   CalendarX,
   Cpu,
   Globe,
   BarChart3,
-  CheckCircle2,
   Check,
   ShieldCheck,
   GraduationCap,
-  HeartHandshake,
-  Lightbulb,
-  Workflow,
-  Compass
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Card, { CardContent } from '../components/ui/Card';
@@ -41,7 +34,7 @@ export default function About() {
           {/* Announcement Pill */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary-50 text-primary-700 text-xs sm:text-sm font-semibold rounded-full border border-primary-100/80 shadow-sm mb-6 animate-in fade-in duration-500">
             <Sparkles className="w-4 h-4 text-primary-600 animate-pulse" />
-            <span>Project-Based Learning (PBL) Academic Initiative</span>
+            <span>Academic EdTech Initiative</span>
           </div>
 
           {/* Main Title */}
@@ -400,13 +393,13 @@ export default function About() {
                 </Link>
                 <Link to="/dashboard" className="w-full sm:w-auto">
                   <Button variant="glass" size="lg" className="w-full sm:w-auto px-6 py-3.5 text-base font-semibold">
-                    Explore Demo Dashboard
+                    Explore Dashboard
                   </Button>
                 </Link>
               </div>
 
               <p className="mt-6 text-xs text-slate-400">
-                Project-Based Learning (PBL) Academic EdTech Assistant
+                Student Revision Platform
               </p>
             </div>
           </div>

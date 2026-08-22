@@ -13,7 +13,6 @@ import {
   UserPlus,
   ArrowLeft,
   Sparkles,
-  Zap,
   Layers,
   Target,
   CheckCircle2,
@@ -188,32 +187,6 @@ export default function Register() {
     setErrors((prev) => ({ ...prev, [name]: errorMsg || undefined }));
   };
 
-  // Quick Demo Auto-fill Helper for instant evaluator testing
-  const handleFillDemo = () => {
-    const demoData = {
-      fullName: 'Alex Mercer',
-      email: 'alex.mercer@stanford.edu',
-      password: 'SecurePass123!#',
-      confirmPassword: 'SecurePass123!#',
-      college: 'Stanford University',
-      course: 'Computer Science & AI',
-      yearOfStudy: '3rd Year',
-    };
-    setFormData(demoData);
-    setErrors({});
-    setTouched({
-      fullName: true,
-      email: true,
-      password: true,
-      confirmPassword: true,
-      college: true,
-      course: true,
-      yearOfStudy: true,
-    });
-    setGlobalError('');
-    toast.info('Student demo profile populated!');
-  };
-
   // Submit Handler
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -230,16 +203,25 @@ export default function Register() {
 
     setIsLoading(true);
 
-    // Simulate registration
+    // Simulate registration & set user in central UserContext
     setTimeout(() => {
+      updateUser({
+        name: formData.fullName.trim(),
+        email: formData.email.trim(),
+        college: formData.college.trim(),
+        course: formData.course.trim(),
+        year: formData.yearOfStudy,
+      });
+      login();
+
       setIsLoading(false);
       setIsSuccess(true);
       toast.success(`Account created for ${formData.fullName}! Welcome to Mind Mapr.`);
 
       setTimeout(() => {
         navigate('/dashboard');
-      }, 1100);
-    }, 1300);
+      }, 700);
+    }, 800);
   };
 
   // Google Sign-Up Mock
@@ -347,7 +329,7 @@ export default function Register() {
           {/* Top Pill */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-950/80 border border-primary-800/60 shadow-sm text-primary-300 text-xs font-medium mb-6 backdrop-blur-md">
             <Sparkles className="w-3.5 h-3.5 text-primary-400 animate-pulse" />
-            <span>Student Registration • PBL Academic Edition</span>
+            <span>Student Registration • Revision Platform</span>
           </div>
 
           {/* Main Headline */}
@@ -389,37 +371,15 @@ export default function Register() {
               );
             })}
           </div>
-
-          {/* Social Proof Metric Card */}
-          <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 backdrop-blur-md flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-sm shadow-md">
-                🎓
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5 text-xs text-amber-400">
-                  {'★'.repeat(5)}
-                  <span className="text-[11px] font-semibold text-slate-300 ml-1">4.9 / 5.0 Rating</span>
-                </div>
-                <p className="text-xs text-slate-400 mt-0.5 line-clamp-1">
-                  Trusted by students from 150+ colleges
-                </p>
-              </div>
-            </div>
-            <div className="text-right shrink-0">
-              <span className="text-xs font-bold text-primary-400 block">12,000+</span>
-              <span className="text-[10px] text-slate-500 block uppercase tracking-wider">Active Learners</span>
-            </div>
-          </div>
         </div>
 
-        {/* Bottom Footer Details */}
-        <div className="relative z-10 hidden sm:flex items-center justify-between text-xs text-slate-500 pt-4 border-t border-slate-900">
+        {/* Bottom Left Footer Details */}
+        <div className="relative z-10 hidden lg:flex items-center justify-between text-xs text-slate-500 pt-4 border-t border-slate-900">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-primary-500" />
-            <span>Strict Privacy • No Ads • SSL Encrypted</span>
+            <span>End-to-End Secure Study Environment</span>
           </div>
-          <span>v1.0.0</span>
+          <span>Student Revision Platform</span>
         </div>
       </div>
 
@@ -433,21 +393,9 @@ export default function Register() {
         <div className="w-full max-w-xl relative z-10 my-4 sm:my-8">
           {/* Header Card / Title */}
           <div className="mb-6 text-center sm:text-left">
-            <div className="flex items-center justify-between mb-2">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                Create Your Mind Mapr Account
-              </h2>
-              {/* Quick Demo Fill Pill for easy review */}
-              <button
-                type="button"
-                onClick={handleFillDemo}
-                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-primary-600 bg-primary-50 hover:bg-primary-100 border border-primary-200/80 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
-                title="Fill student demo details for fast testing"
-              >
-                <Zap className="w-3 h-3 text-primary-600" />
-                <span>Auto-fill Demo</span>
-              </button>
-            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
+              Create Your Mind Mapr Account
+            </h2>
             <p className="text-sm text-slate-500">
               Start turning your study materials into smarter revision.
             </p>
@@ -765,18 +713,6 @@ export default function Register() {
               </svg>
               <span>{isGoogleLoading ? 'Connecting...' : 'Continue with Google'}</span>
             </Button>
-
-            {/* Mobile Auto-Fill Demo Button */}
-            <div className="mt-4 sm:hidden text-center">
-              <button
-                type="button"
-                onClick={handleFillDemo}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary-600 bg-primary-50 hover:bg-primary-100 border border-primary-200/80 px-3 py-1.5 rounded-lg transition-colors cursor-pointer w-full justify-center"
-              >
-                <Zap className="w-3.5 h-3.5 text-primary-600" />
-                <span>Auto-fill Demo Student Details</span>
-              </button>
-            </div>
 
             {/* Bottom Login Link */}
             <div className="mt-6 pt-4 border-t border-slate-100 text-center">

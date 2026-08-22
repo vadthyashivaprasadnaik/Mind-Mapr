@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import {
-  TrendingUp,
   Award,
   GraduationCap,
   Layers,
@@ -16,7 +15,6 @@ import {
   Bookmark,
   Target,
   FileText,
-  RefreshCw,
   BarChart3,
   ShieldCheck,
 } from 'lucide-react';
@@ -26,8 +24,6 @@ import Card, { CardContent, CardHeader } from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import ProgressBar from '../components/ui/ProgressBar';
-import EmptyState from '../components/ui/EmptyState';
-import LoadingState from '../components/ui/LoadingState';
 import { useToast } from '../components/ui/Toast';
 
 export default function Progress() {
@@ -48,9 +44,6 @@ export default function Progress() {
   };
 
   const material = location.state?.material || defaultMaterial;
-
-  // View state: 'ready' | 'loading' | 'empty' | 'error'
-  const [viewState, setViewState] = useState('ready');
 
   // Date Range Period Filter: 'week' | 'month' | 'all'
   const [timeRange, setTimeRange] = useState('week');
@@ -306,70 +299,8 @@ export default function Progress() {
           title="Progress"
           description="Track your learning progress and see how your study habits are improving."
         >
-          {/* Dev / Tester Controls & Time Range Filter */}
+          {/* Time Range Filter */}
           <div className="flex items-center gap-2.5">
-            {/* Tester State Controls */}
-            <div className="hidden lg:flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs">
-              <button
-                type="button"
-                onClick={() => {
-                  setViewState('ready');
-                  toast.info('Viewing progress metrics');
-                }}
-                className={`px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
-                  viewState === 'ready'
-                    ? 'bg-white text-slate-900 shadow-2xs font-bold'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                Ready
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setViewState('loading');
-                  toast.info('Simulating loading state...');
-                  setTimeout(() => setViewState('ready'), 1200);
-                }}
-                className={`px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
-                  viewState === 'loading'
-                    ? 'bg-white text-primary-700 shadow-2xs font-bold'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                Loading
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setViewState('empty');
-                  toast.info('Simulating empty progress state');
-                }}
-                className={`px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
-                  viewState === 'empty'
-                    ? 'bg-white text-slate-900 shadow-2xs font-bold'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                Empty
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setViewState('error');
-                  toast.error('Simulating error state');
-                }}
-                className={`px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
-                  viewState === 'error'
-                    ? 'bg-white text-red-700 shadow-2xs font-bold'
-                    : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                Error
-              </button>
-            </div>
-
-            {/* Time Range Filter Pills */}
             <div className="flex items-center bg-white p-1 rounded-xl border border-slate-200 shadow-2xs text-xs font-semibold">
               {[
                 { id: 'week', label: 'This Week' },
@@ -411,65 +342,7 @@ export default function Progress() {
         </span>
       </div>
 
-      {/* ========================================================================= */}
-      {/* 2. CONDITIONAL STATE ROUTING (LOADING | ERROR | EMPTY | READY)             */}
-      {/* ========================================================================= */}
-
-      {/* STAGE: LOADING */}
-      {viewState === 'loading' && (
-        <LoadingState
-          message="Loading your progress..."
-          description="Aggregating quiz performance, mastery scores, and study streak analytics."
-          size="lg"
-          className="my-8"
-        />
-      )}
-
-      {/* STAGE: ERROR */}
-      {viewState === 'error' && (
-        <Card className="border-red-200 bg-red-50/30 shadow-sm max-w-xl mx-auto my-8">
-          <CardContent className="p-8 text-center flex flex-col items-center">
-            <div className="w-14 h-14 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center mb-4 border border-red-200">
-              <AlertTriangle className="w-7 h-7" />
-            </div>
-            <h3 className="text-lg font-bold text-slate-900">
-              Unable to load progress
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-sm">
-              Something went wrong while preparing your learning dashboard.
-            </p>
-            <Button
-              variant="primary"
-              size="md"
-              iconLeft={RefreshCw}
-              onClick={() => {
-                setViewState('ready');
-                toast.success('Learning progress reloaded.');
-              }}
-              className="mt-6 font-semibold text-xs sm:text-sm cursor-pointer shadow-sm"
-            >
-              Try Again
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* STAGE: EMPTY */}
-      {viewState === 'empty' && (
-        <EmptyState
-          icon={TrendingUp}
-          title="Your Progress Will Appear Here"
-          description="Complete quizzes, review flashcards and follow your revision plan to start tracking your learning progress."
-          actionLabel="Take a Quiz"
-          actionIcon={GraduationCap}
-          onActionClick={() => navigate('/quiz')}
-          className="my-8"
-        />
-      )}
-
-      {/* STAGE: READY */}
-      {viewState === 'ready' && (
-        <div className="flex flex-col gap-6 animate-in fade-in duration-200">
+      <div className="flex flex-col gap-6 animate-in fade-in duration-200">
           {/* ===================================================================== */}
           {/* 3. HERO: OVERALL PROGRESS & 4 KEY STATISTICS                          */}
           {/* ===================================================================== */}
@@ -782,7 +655,6 @@ export default function Progress() {
                 const isMastered = topic.mastery >= 90;
                 const isGood = topic.mastery >= 75 && topic.mastery < 90;
                 const isNeedsPractice = topic.mastery >= 50 && topic.mastery < 75;
-                const isNeedsAttention = topic.mastery < 50;
 
                 const StatusIcon = topic.icon;
                 const progressVariant = isMastered
@@ -1171,13 +1043,12 @@ export default function Progress() {
           {/* 9. AI & STUDY GUIDANCE DISCLAIMER FOOTER CARD                          */}
           {/* ===================================================================== */}
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-center flex items-center justify-center text-xs text-slate-500">
-            <span className="inline-flex items-center gap-1.5 font-medium">
+            <span className="inline-flex items-center gap-1 font-medium">
               <Sparkles className="w-3.5 h-3.5 text-primary-500" />
               Progress insights are based on your available study activity and quiz performance.
             </span>
           </div>
         </div>
-      )}
     </div>
   );
 }

@@ -8,7 +8,6 @@ import {
   BookOpen,
   Target,
   FileText,
-  HelpCircle,
   BarChart3,
   CheckCircle2,
   Layers,
@@ -21,8 +20,6 @@ import {
   TrendingUp,
   Award,
   RefreshCw,
-  Eye,
-  Sliders
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Card, { CardContent } from '../components/ui/Card';
@@ -35,7 +32,6 @@ export default function Landing() {
   const [selectedNode, setSelectedNode] = useState('Process Scheduling');
   const [isFlipped, setIsFlipped] = useState(false);
   const [selectedQuizOption, setSelectedQuizOption] = useState(null);
-  const [isFlashcardMastered, setIsFlashcardMastered] = useState(false);
 
   // Mind map nodes data for hero interactive preview
   const mindMapNodes = [
@@ -63,9 +59,6 @@ export default function Landing() {
               <Sparkles className="w-4 h-4 text-primary-600" />
               <span className="text-xs sm:text-sm font-semibold text-slate-800">
                 AI-Powered Smart Revision Assistant
-              </span>
-              <span className="hidden sm:inline text-xs text-primary-700 bg-primary-50 px-2 py-0.5 rounded-full font-medium border border-primary-100">
-                PBL Academic Edition
               </span>
             </div>
 

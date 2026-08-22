@@ -15,11 +15,12 @@ import {
   Settings,
   LogOut,
   BrainCircuit,
-  Sparkles
 } from 'lucide-react';
+import { useUser } from '../../context/UserContext';
 
 export default function Sidebar({ isOpen, setIsOpen }) {
   const location = useLocation();
+  const { user, isLoggedIn } = useUser();
 
   const isActive = (path) => location.pathname === path;
 
@@ -63,7 +64,10 @@ export default function Sidebar({ isOpen, setIsOpen }) {
       >
         {/* Logo Header */}
         <div className="h-16 px-6 border-b border-slate-100 flex items-center justify-between shrink-0">
-          <Link to="/" className="flex items-center gap-2.5 group">
+          <Link
+            to={isLoggedIn ? '/dashboard' : '/'}
+            className="flex items-center gap-2.5 group"
+          >
             <div className="p-2 rounded-xl bg-gradient-to-tr from-primary-600 to-secondary-600 text-white shadow-sm shadow-primary-500/20 group-hover:scale-105 transition-transform duration-300">
               <BrainCircuit className="w-5 h-5" />
             </div>
@@ -83,10 +87,6 @@ export default function Sidebar({ isOpen, setIsOpen }) {
           <div className="px-3 pb-1.5 flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
               Study Navigation
-            </span>
-            <span className="flex items-center gap-1 text-[10px] text-primary-600 bg-primary-50 px-2 py-0.5 rounded-full font-semibold">
-              <Sparkles className="w-3 h-3" />
-              <span>AI Active</span>
             </span>
           </div>
 
@@ -145,16 +145,23 @@ export default function Sidebar({ isOpen, setIsOpen }) {
             );
           })}
 
-          {/* Mini Student Avatar Card */}
-          <div className="mt-1 pt-2 border-t border-slate-200/60 flex items-center gap-2.5 px-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary-500 to-secondary-500 text-white flex items-center justify-center font-bold text-xs shadow-xs shrink-0">
-              AM
+          {/* Mini Student Avatar Card (Single Persistent User Display) */}
+          <Link
+            to="/profile"
+            className="mt-1 pt-2 border-t border-slate-200/60 flex items-center gap-2.5 px-2 hover:bg-slate-100/60 rounded-xl transition py-1"
+          >
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary-600 to-secondary-600 text-white flex items-center justify-center font-bold text-xs shadow-xs shrink-0">
+              {user.avatarInitials}
             </div>
             <div className="flex-1 min-w-0">
-              <h5 className="text-xs font-bold text-slate-800 truncate">Alex Mercer</h5>
-              <p className="text-[10px] text-slate-500 truncate">alex@stanford.edu</p>
+              <h5 className="text-xs font-bold text-slate-800 truncate">
+                {user.name}
+              </h5>
+              <p className="text-[10px] text-slate-500 truncate">
+                {user.email}
+              </p>
             </div>
-          </div>
+          </Link>
         </div>
       </aside>
     </>

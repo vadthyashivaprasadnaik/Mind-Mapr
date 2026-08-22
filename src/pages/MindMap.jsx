@@ -488,54 +488,15 @@ export default function MindMap() {
       {/* 1. BREADCRUMB, BACK BUTTON & HEADER                                       */}
       {/* ========================================================================= */}
       <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between">
-          <BackButton label="Back" fallback="/materials" />
-
-          {/* Dev State Switcher (for quick testing of states) */}
-          <div className="flex items-center gap-1 text-[11px] text-slate-400 bg-slate-100 p-1 rounded-xl border border-slate-200">
-            <span className="px-1.5 font-mono text-[10px] uppercase font-bold text-slate-500">Preview:</span>
-            <button
-              type="button"
-              onClick={() => setViewState('ready')}
-              className={`px-2 py-0.5 rounded-lg font-medium cursor-pointer transition-colors ${
-                viewState === 'ready' ? 'bg-white text-slate-900 shadow-xs font-bold' : 'hover:text-slate-700'
-              }`}
-            >
-              Ready
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewState('loading')}
-              className={`px-2 py-0.5 rounded-lg font-medium cursor-pointer transition-colors ${
-                viewState === 'loading' ? 'bg-white text-slate-900 shadow-xs font-bold' : 'hover:text-slate-700'
-              }`}
-            >
-              Loading
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewState('empty')}
-              className={`px-2 py-0.5 rounded-lg font-medium cursor-pointer transition-colors ${
-                viewState === 'empty' ? 'bg-white text-slate-900 shadow-xs font-bold' : 'hover:text-slate-700'
-              }`}
-            >
-              Empty
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewState('error')}
-              className={`px-2 py-0.5 rounded-lg font-medium cursor-pointer transition-colors ${
-                viewState === 'error' ? 'bg-white text-slate-900 shadow-xs font-bold' : 'hover:text-slate-700'
-              }`}
-            >
-              Error
-            </button>
-          </div>
-        </div>
+        <BackButton
+          label="Back"
+          fallback="/ai-analysis"
+          to={location.state?.from || '/ai-analysis'}
+        />
 
         <PageHeader
-          title="Interactive Mind Map"
-          description="Explore the concepts and relationships in your study material."
+          title="Concept Mind Map"
+          description="Interactive visual representation of your study material."
         >
           <div className="flex flex-wrap items-center gap-2">
             <Link to="/summary">

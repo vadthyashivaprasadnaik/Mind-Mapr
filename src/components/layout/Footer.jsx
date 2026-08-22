@@ -46,8 +46,8 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-          <p>© {new Date().getFullYear()} Mind Mapr. Project-Based Learning (PBL) Academic EdTech Assistant.</p>
-          <p className="text-slate-400">Designed for college students.</p>
+          <p>© {new Date().getFullYear()} Mind Mapr. Student Revision Platform.</p>
+          <p className="text-slate-400">Designed for university & college students.</p>
         </div>
       </div>
     </footer>

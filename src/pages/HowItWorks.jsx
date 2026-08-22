@@ -9,32 +9,21 @@ import {
   BrainCircuit,
   Zap,
   Target,
-  BarChart3,
+  AlertTriangle,
   CheckCircle2,
-  Check,
   Calendar,
-  Layers,
   Search,
   BookOpen,
-  TrendingUp,
-  AlertTriangle,
-  Clock,
-  ArrowDown,
-  RefreshCw,
-  FileCode,
   CheckCheck
 } from 'lucide-react';
 import Button from '../components/ui/Button';
-import Card, { CardContent, CardHeader } from '../components/ui/Card';
+import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import ProgressBar from '../components/ui/ProgressBar';
 
 export default function HowItWorks() {
   // Active Interactive Step state for top diagram highlight
   const [activeStep, setActiveStep] = useState(1);
-
-  // Step 3 Interactive Asset Selector
-  const [selectedAssetTab, setSelectedAssetTab] = useState('mindmap'); // 'summary' | 'mindmap' | 'flashcards' | 'quiz'
 
   // Step 4 Interactive Flashcard State
   const [isFlashcardFlipped, setIsFlashcardFlipped] = useState(false);

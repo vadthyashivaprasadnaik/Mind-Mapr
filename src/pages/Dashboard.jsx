@@ -23,9 +23,11 @@ import Card, { CardContent } from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 import ProgressBar from '../components/ui/ProgressBar';
 import { useToast } from '../components/ui/Toast';
+import { useUser } from '../context/UserContext';
 
 export default function Dashboard() {
   const toast = useToast();
+  const { user } = useUser();
 
   // Greeting based on time of day
   const getGreeting = () => {
@@ -35,7 +37,7 @@ export default function Dashboard() {
     return 'Good evening';
   };
 
-  // Demo statistics cards
+  // Performance statistics cards
   const stats = [
     {
       id: 'mastery',
@@ -43,7 +45,6 @@ export default function Dashboard() {
       value: '74%',
       detail: '+4% improvement this week',
       icon: Award,
-      badge: 'Demo Data',
       color: 'bg-primary-50 text-primary-600 border-primary-100',
       progress: 74,
     },
@@ -53,7 +54,6 @@ export default function Dashboard() {
       value: '48 / 65',
       detail: '73% semester syllabus covered',
       icon: Bookmark,
-      badge: 'Demo Data',
       color: 'bg-secondary-50 text-secondary-600 border-secondary-100',
       progress: 73,
     },
@@ -63,7 +63,6 @@ export default function Dashboard() {
       value: '86% Avg',
       detail: '14 adaptive quizzes completed',
       icon: GraduationCap,
-      badge: 'Demo Data',
       color: 'bg-emerald-50 text-emerald-600 border-emerald-100',
       progress: 86,
     },
@@ -73,7 +72,6 @@ export default function Dashboard() {
       value: '7 Days 🔥',
       detail: 'Personal record: 12 days',
       icon: Flame,
-      badge: 'Demo Data',
       color: 'bg-amber-50 text-amber-600 border-amber-100',
       progress: 58,
     },
@@ -258,13 +256,10 @@ export default function Dashboard() {
               <Sparkles className="w-3 h-3 text-primary-600" />
               <span>AI Study Workspace</span>
             </span>
-            <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
-              Demo Mode Active
-            </span>
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            {getGreeting()}, Student! 👋
+            {getGreeting()}, {user.name}! 👋
           </h1>
           <p className="text-sm sm:text-base text-slate-500 mt-1 max-w-xl">
             Here's what your revision looks like today. You have 3 topics queued for spaced recall.
@@ -297,7 +292,7 @@ export default function Dashboard() {
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. STATISTICS CARDS (DEMO DATA)                                           */}
+      {/* 2. STATISTICS CARDS                                                       */}
       {/* ========================================================================= */}
       <section>
         <div className="flex items-center justify-between mb-4">
@@ -305,9 +300,6 @@ export default function Dashboard() {
             <h2 className="text-base font-bold text-slate-900 tracking-tight">
               Study Performance Overview
             </h2>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">
-              Demo Data
-            </span>
           </div>
           <Link
             to="/progress"
@@ -336,9 +328,6 @@ export default function Dashboard() {
                   <div className="flex items-baseline gap-2 mb-2">
                     <span className="text-2xl font-extrabold text-slate-900 tracking-tight">
                       {item.value}
-                    </span>
-                    <span className="text-[10px] font-mono font-bold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
-                      Demo
                     </span>
                   </div>
 
@@ -374,9 +363,6 @@ export default function Dashboard() {
                 Pick up where you left off with real-time topic progress.
               </p>
             </div>
-            <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md uppercase">
-              Demo Data
-            </span>
           </div>
 
           <div className="flex flex-col gap-3">
@@ -458,9 +444,6 @@ export default function Dashboard() {
                 Concepts requiring immediate spaced repetition.
               </p>
             </div>
-            <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md uppercase">
-              Demo Data
-            </span>
           </div>
 
           <div className="flex flex-col gap-3">
@@ -579,9 +562,6 @@ export default function Dashboard() {
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md uppercase">
-              Demo Data
-            </span>
             <Link
               to="/materials"
               className="text-xs font-semibold text-primary-600 hover:text-primary-700 inline-flex items-center gap-1"
